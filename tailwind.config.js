@@ -2,11 +2,11 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -65,10 +65,20 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        clockwise: {
+          from: { transform: "rotateZ(0deg)" },
+          to: { transform: "rotateZ(360deg)" },
+        },
+        "counter-clockwise": {
+          from: { transform: "rotateZ(360deg)" },
+          to: { transform: "rotateZ(0deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        rotate: "clockwise 20s linear infinite",
+        "counter-rotate": "counter-clockwise 20s linear infinite",
       },
     },
   },
