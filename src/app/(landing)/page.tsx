@@ -59,7 +59,7 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
         e.stopPropagation()
         exitFocus()
       }}
-      className={`relative bg-amber-300 rounded-full animate-rotate`}
+      className={`relative rounded-full animate-rotate`}
     >
       {Children.map(children, (child, index) => {
         const clonedChild = cloneElement(child as React.ReactElement, {
@@ -114,7 +114,9 @@ const LandingPage = () => {
           hello
         </div>
 
-        <div className="w-16 h-16 bg-indigo-200 rounded-full"></div>
+        <div className="w-16 h-16 bg-indigo-200 rounded-full flex justify-center items-center">
+          harper
+        </div>
       </RotatingCarousel>
     </div>
   )
