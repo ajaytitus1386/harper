@@ -50,6 +50,18 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Custom Colors
+        landing: {
+          from: "#ffb88e",
+          to: "#ea5753",
+        },
+        primary: {
+          100: "#1F2C47",
+          200: "#192339",
+          300: "#131A2B",
+          400: "#121B2B",
+          500: "#06090E",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

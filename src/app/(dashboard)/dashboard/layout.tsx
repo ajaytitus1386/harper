@@ -1,9 +1,8 @@
 "use client"
 
 import React, { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faBars, faClose } from "@fortawesome/free-solid-svg-icons"
+import Topbar from "@/components/dashboard/topbar"
+import Sidebar from "@/components/dashboard/sidebar"
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -13,26 +12,14 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   return (
     <div className="flex flex-col h-full relative">
       {/* Topbar */}
-      <div className="flex flex-row justify-between items-center w-full h-16 bg-gray-900">
-        <Button
-          className="block md:hidden"
-          onClick={() => setIsSidebarOpen((prev) => !prev)}
-        >
-          <FontAwesomeIcon
-            icon={isSidebarOpen ? faClose : faBars}
-            className="text-lg text-white"
-          />
-        </Button>
-      </div>
-      <div className="flex flex-row h-full">
+      <Topbar
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+      />
+      <div className="flex flex-row h-full relative">
         {/* Sidebar */}
-        <div
-          className={[
-            "flex flex-col w-72 md:translate-x-0 bg-gray-900 transition-all duration-300 ease-in-out",
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full",
-          ].join(" ")}
-        ></div>
-        <main>{children}</main>
+        <Sidebar isSidebarOpen={isSidebarOpen} />
+        <main className="py-1 px-2 md:py-2 md:px-4">{children}</main>
       </div>
     </div>
   )
