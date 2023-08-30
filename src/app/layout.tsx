@@ -4,7 +4,14 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { ClerkProvider } from "@clerk/nextjs"
 import { library } from "@fortawesome/fontawesome-svg-core"
-import { faBars, faClose } from "@fortawesome/free-solid-svg-icons"
+import {
+  faBars,
+  faClose,
+  faLayerGroup,
+  faGear,
+} from "@fortawesome/free-solid-svg-icons"
+
+import { faComments } from "@fortawesome/free-regular-svg-icons"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -13,7 +20,7 @@ export const metadata: Metadata = {
   description: "Multi Purpose AI web platform",
 }
 
-library.add(faBars, faClose)
+library.add(faBars, faClose, faLayerGroup, faComments, faGear)
 
 export default function RootLayout({
   children,

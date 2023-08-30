@@ -62,6 +62,11 @@ module.exports = {
           400: "#121B2B",
           500: "#06090E",
         },
+        routes: {
+          dashboard: "#ea5753",
+          conversation: "#80CFA9",
+          settings: "#D8E2DC",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
