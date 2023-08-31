@@ -3,19 +3,21 @@ import { faGear, faLayerGroup } from "@fortawesome/free-solid-svg-icons"
 import { faComments } from "@fortawesome/free-regular-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 interface Props {
   isSidebarOpen: boolean
 }
 
-interface Route {
+export interface HarperRoute {
   label: string
   Icon: (color: string) => React.JSX.Element
   href: string
   color: string
 }
 
-const routes: Route[] = [
+export const routes: HarperRoute[] = [
   {
     label: "Dashboard",
     href: "/dashboard",
@@ -25,7 +27,7 @@ const routes: Route[] = [
     ),
   },
   {
-    label: "Converstaion",
+    label: "Conversation",
     href: "/conversation",
     color: "text-routes-conversation",
     Icon: (color: string) => (
@@ -43,19 +45,24 @@ const routes: Route[] = [
 ]
 
 const Sidebar: React.FC<Props> = ({ isSidebarOpen }) => {
+  const pathname = usePathname()
+
   return (
     <div
       className={[
-        "absolute top-0 md:relative h-full flex flex-col justify-between py-4 px-2 w-72 bg-primary-300 transition-all duration-300 ease-in-out overflow-hidden",
+        "absolute top-0 md:relative h-full flex flex-col justify-between py-4 w-72 bg-primary-300 transition-all duration-300 ease-in-out overflow-hidden",
         isSidebarOpen ? "left-0 md:left-auto" : "-left-full md:left-auto",
       ].join(" ")}
     >
-      <div className="flex flex-col gap-y-4 px-4 py-8 overflow-auto">
+      <div className="flex flex-col gap-y-2 px-2 py-8 overflow-auto">
         {routes.map((route) => (
           <Link
             key={route.href}
             href={route.href}
-            className="flex items-center justify-start gap-x-2"
+            className={cn(
+              "flex items-center justify-start rounded-lg gap-x-2 hover:bg-primary-100 px-2 py-2",
+              pathname === route.href && "bg-primary-100"
+            )}
           >
             {route.Icon(route.color)}
             <h2 className="text-white text-lg">{route.label}</h2>
