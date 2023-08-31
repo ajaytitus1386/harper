@@ -19,7 +19,9 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
       <div className="flex flex-row h-full relative">
         {/* Sidebar */}
         <Sidebar isSidebarOpen={isSidebarOpen} />
-        <main className="py-1 px-2 md:py-2 md:px-4">{children}</main>
+        <main className="flex h-full w-full py-1 px-2 md:py-2 md:px-4">
+          {children}
+        </main>
       </div>
     </div>
   )
