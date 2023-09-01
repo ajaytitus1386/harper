@@ -108,7 +108,10 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
 
 const LandingPage = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full">
+    <div className="flex flex-col relative items-center justify-center h-full w-full mt-8">
+      <h1 className="absolute top-16 text-2xl md:text-3xl xl:text-4xl xxl:text-5xl xl:leading-normal font-bold text-transparent text-center bg-clip-text bg-gradient-to-r from-landing-from to-landing-to">
+        Compose your Imagination into Reality
+      </h1>
       <RotatingCarousel>
         <div className="w-16 h-16 bg-indigo-700 rounded-full flex justify-center items-center">
           hello
