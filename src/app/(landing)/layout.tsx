@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { useUser } from "@clerk/nextjs"
+import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
 import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
@@ -91,12 +91,12 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
           </Link>
         ) : (
           <div className="flex gap-x-4">
-            <Link href="/sign-in">
+            <SignInButton mode="modal">
               <Button>Sign In</Button>
-            </Link>
-            <Link href="/sign-up">
+            </SignInButton>
+            <SignUpButton mode="modal">
               <Button>Sign Up</Button>
-            </Link>
+            </SignUpButton>
           </div>
         )}
       </div>
