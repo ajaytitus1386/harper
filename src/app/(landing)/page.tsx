@@ -2,7 +2,6 @@
 
 import { useBreakpoint } from "@/hooks/useBreakpoint"
 import { cn } from "@/lib/utils"
-import dynamic from "next/dynamic"
 import React, { Children, cloneElement, useEffect, useState } from "react"
 
 const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
