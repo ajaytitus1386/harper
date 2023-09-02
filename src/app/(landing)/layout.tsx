@@ -1,16 +1,45 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { useUser } from "@clerk/nextjs"
 import Image from "next/image"
 import Link from "next/link"
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   const { isSignedIn, isLoaded } = useUser()
+
+  const [isSplash, setIsSplash] = useState(true)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsSplash(false)
+    }, 2000)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [])
+
+  const animatedDividerClassName = `transition-transform duration-700 delay-500 ${
+    isSplash ? "-translate-y-full" : "-translate-y-0"
+  }`
+
+  const animatedLandingElementsClassName = `transition-opacity duration-500 delay-1000 ${
+    isSplash ? "opacity-0" : "opacity-100"
+  }`
+
   return (
     <main className="relative h-full max-w-full overflow-auto bg-gradient-to-b from-landing-from to-landing-to">
-      <div className="absolute top-0 left-0 w-full overflow-hidden">
+      <div
+        className={cn(
+          [
+            "absolute top-0 left-0 w-full overflow-hidden",
+            animatedDividerClassName,
+          ].join(" ")
+        )}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1280 901.84"
@@ -27,10 +56,28 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
           </g>
         </svg>
       </div>
-      <div className="absolute top-0 left-0 h-full w-full">{children}</div>
+
+      {/* Children */}
+      <div
+        className={cn(
+          [
+            "absolute top-0 left-0 h-full w-full",
+            animatedLandingElementsClassName,
+          ].join(" ")
+        )}
+      >
+        {children}
+      </div>
 
       {/* Top bar */}
-      <div className="absolute w-full flex justify-between items-center py-2 px-4 bg-transparent">
+      <div
+        className={cn(
+          [
+            "absolute w-full flex justify-between items-center py-2 px-4 bg-transparent",
+            animatedLandingElementsClassName,
+          ].join(" ")
+        )}
+      >
         <Image
           src="/harp.svg"
           width={64}
