@@ -1,6 +1,9 @@
 "use client"
 
-import React, { Children, cloneElement, useState } from "react"
+import { useBreakpoint } from "@/hooks/useBreakpoint"
+import { cn } from "@/lib/utils"
+import dynamic from "next/dynamic"
+import React, { Children, cloneElement, useEffect, useState } from "react"
 
 const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -9,7 +12,29 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
   const [selectedChild, setSelectedChild] = useState<React.ReactElement | null>(
     null
   )
-  const parentDiameter = 40 // in view widths
+
+  // const breakpoint = getCurrentBreakpoint()
+
+  const breakpoints = useBreakpoint()
+  // Measured in view widths (vw)
+  const [parentDiameter, setParentDiameter] = useState(15)
+
+  useEffect(() => {
+    setParentDiameter(
+      breakpoints["2xl"]
+        ? 30
+        : breakpoints["xl"]
+        ? 30
+        : breakpoints["lg"]
+        ? 35
+        : breakpoints["md"]
+        ? 40
+        : breakpoints["sm"]
+        ? 60
+        : 80
+    )
+    console.log(breakpoints)
+  }, [breakpoints])
 
   const arrayOfChildren = Children.toArray(children)
 
@@ -63,10 +88,12 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
     >
       {Children.map(children, (child, index) => {
         const clonedChild = cloneElement(child as React.ReactElement, {
-          className: [
-            (child as React.ReactElement)?.props?.className,
-            "hover:scale-150 transition-transform duration-300 ease-in-out",
-          ].join(" "),
+          className: cn(
+            [
+              (child as React.ReactElement)?.props?.className,
+              "w-16 h-16 rounded-full flex justify-center items-center transition-transform duration-300 ease-in-out",
+            ].join(" ")
+          ),
         })
 
         return (
@@ -109,17 +136,19 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
 const LandingPage = () => {
   return (
     <div className="flex flex-col relative items-center justify-center h-full w-full mt-8">
-      <h1 className="absolute top-16 text-2xl md:text-3xl xl:text-4xl xxl:text-5xl xl:leading-normal font-bold text-transparent text-center bg-clip-text bg-gradient-to-r from-landing-from to-landing-to">
+      <h1 className="absolute w-full md:w-1/2 top-16 text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl leading-normal font-bold text-transparent text-center bg-clip-text bg-gradient-to-r from-landing-from to-landing-to">
         Compose your Imagination into Reality
       </h1>
       <RotatingCarousel>
-        <div className="w-16 h-16 bg-indigo-700 rounded-full flex justify-center items-center">
-          hello
-        </div>
+        <div className="bg-indigo-500">hello</div>
 
-        <div className="w-16 h-16 bg-indigo-200 rounded-full flex justify-center items-center">
-          harper
-        </div>
+        <div className="bg-indigo-200">harper</div>
+
+        <div className="bg-indigo-700">hanya</div>
+
+        <div className="bg-indigo-700">honalulu</div>
+
+        <div className="bg-indigo-700">haberdash</div>
       </RotatingCarousel>
     </div>
   )
