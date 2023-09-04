@@ -1,7 +1,6 @@
 "use client"
 
 import { HarperRoute } from "@/components/dashboard/sidebar"
-import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { faComments } from "@fortawesome/free-regular-svg-icons"
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
@@ -15,36 +14,6 @@ type HarperTool = HarperRoute & {
 }
 
 const tools: HarperTool[] = [
-  {
-    label: "Conversation",
-    href: "/conversation",
-    color: "text-routes-conversation",
-    Icon: (color: string) => (
-      <FontAwesomeIcon icon={faComments} className={`${color} text-xl w-8`} />
-    ),
-    bgColor: "bg-routes-conversation/75",
-    Blurb: (
-      <p>
-        Chat about anything to Llama language model, trained on 70 billion
-        parameters
-      </p>
-    ),
-  },
-  {
-    label: "Conversation",
-    href: "/conversation",
-    color: "text-routes-conversation",
-    Icon: (color: string) => (
-      <FontAwesomeIcon icon={faComments} className={`${color} text-xl w-8`} />
-    ),
-    bgColor: "bg-routes-conversation/75",
-    Blurb: (
-      <p>
-        Chat about anything to Llama language model, trained on 70 billion
-        parameters
-      </p>
-    ),
-  },
   {
     label: "Conversation",
     href: "/conversation",
