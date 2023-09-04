@@ -18,8 +18,11 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
       />
       <div className="flex flex-row h-full relative">
         {/* Sidebar */}
-        <Sidebar isSidebarOpen={isSidebarOpen} />
-        <main className="flex h-full w-full py-1 px-2 md:py-2 md:px-4">
+        <Sidebar
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+        />
+        <main className="flex h-full w-full py-4 px-4 md:py-8 md:px-4">
           {children}
         </main>
       </div>

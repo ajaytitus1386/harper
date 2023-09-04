@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 
 interface Props {
   isSidebarOpen: boolean
+  setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface HarperRoute {
@@ -44,8 +45,10 @@ export const routes: HarperRoute[] = [
   },
 ]
 
-const Sidebar: React.FC<Props> = ({ isSidebarOpen }) => {
+const Sidebar: React.FC<Props> = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const pathname = usePathname()
+  let touchStart = 0
+  let touchEnd = 0
 
   return (
     <div
@@ -53,6 +56,16 @@ const Sidebar: React.FC<Props> = ({ isSidebarOpen }) => {
         "absolute top-0 md:relative h-full flex flex-col justify-between py-4 w-72 bg-primary-300 transition-all duration-300 ease-in-out overflow-hidden",
         isSidebarOpen ? "left-0 md:left-auto" : "-left-full md:left-auto",
       ].join(" ")}
+      onTouchStart={(e) => {
+        touchStart = e.changedTouches[0].clientX
+      }}
+      onTouchEnd={(e) => {
+        touchEnd = e.changedTouches[0].clientX
+        console.log(touchStart - touchEnd)
+        if (touchStart - touchEnd > 45) {
+          setIsSidebarOpen(false)
+        }
+      }}
     >
       <div className="flex flex-col gap-y-2 px-2 py-8 overflow-auto">
         {routes.map((route) => (
