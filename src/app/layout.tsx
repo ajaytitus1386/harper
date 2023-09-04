@@ -10,6 +10,8 @@ import {
   faLayerGroup,
   faGear,
   faArrowRight,
+  faPaperPlane,
+  faUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons"
 
 import { faComments } from "@fortawesome/free-regular-svg-icons"
@@ -24,7 +26,16 @@ export const metadata: Metadata = {
   description: "Multi Purpose AI web platform",
 }
 
-library.add(faBars, faClose, faLayerGroup, faComments, faGear, faArrowRight)
+library.add(
+  faBars,
+  faClose,
+  faLayerGroup,
+  faComments,
+  faGear,
+  faArrowRight,
+  faPaperPlane,
+  faUpRightFromSquare
+)
 
 export default function RootLayout({
   children,
