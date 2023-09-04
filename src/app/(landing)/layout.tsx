@@ -6,6 +6,7 @@ import { SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
 import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
+import PropogateLoader from "react-spinners/PropagateLoader"
 
 const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   const { isSignedIn, isLoaded } = useUser()
@@ -31,7 +32,21 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   }`
 
   return (
-    <main className="relative h-full max-w-full overflow-auto bg-gradient-to-b from-landing-from to-landing-to">
+    <main
+      className={cn(
+        "relative h-full max-w-full bg-gradient-to-b from-landing-from to-landing-to",
+        isSplash ? "overflow-hidden" : "overflow-auto"
+      )}
+    >
+      <PropogateLoader
+        color={"#fff"}
+        loading={isSplash}
+        size={15}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+        className="absolute top-1/2 left-1/2 -translate-y-1/2"
+      />
+
       <div
         className={cn(
           [
