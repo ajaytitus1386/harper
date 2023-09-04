@@ -61,7 +61,6 @@ const Sidebar: React.FC<Props> = ({ isSidebarOpen, setIsSidebarOpen }) => {
       }}
       onTouchEnd={(e) => {
         touchEnd = e.changedTouches[0].clientX
-        console.log(touchStart - touchEnd)
         if (touchStart - touchEnd > 45) {
           setIsSidebarOpen(false)
         }
