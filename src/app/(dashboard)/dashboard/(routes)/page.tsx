@@ -54,7 +54,11 @@ const ToolCard = ({ tool }: { tool: HarperTool }) => {
         }`}
       >
         {tool.Blurb}
-        <Link href={tool.href}>
+        <Link
+          onClick={(e) => e.stopPropagation()}
+          href={tool.href}
+          className="w-full"
+        >
           <FontAwesomeIcon
             icon={faArrowRight}
             className={`text-lg ${tool.color}`}
