@@ -19,7 +19,7 @@ import {
   faPaperPlane,
   faUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons"
-import { faComments } from "@fortawesome/free-regular-svg-icons"
+import { faComments, faCopy } from "@fortawesome/free-regular-svg-icons"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
@@ -32,6 +32,44 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { conversationModes, converstaionFormSchema } from "./constant"
+import { ScrollArea } from "@/components/ui/scroll-area"
+
+const BotMessage = ({ message }: { message: string }) => {
+  return (
+    <div className="flex w-full sm:w-1/2 md:w-[400px] px-4 py-2 space-x-2 ml-auto">
+      <div className="flex flex-col">
+        <Button>
+          <FontAwesomeIcon
+            icon={faCopy}
+            className="text-sm text-muted-foreground"
+          />
+        </Button>
+      </div>
+      <div className="flex flex-1 px-2 py-1 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
+        {message}
+      </div>
+    </div>
+  )
+}
+
+const UserMessage = ({ message }: { message: string }) => {
+  return (
+    <div className="flex w-full sm:w-1/2 md:w-[400px] px-4 py-2 space-x-2 mr-auto">
+      <div className="flex flex-1 px-2 py-1 bg-gray-50 text-black rounded-r-lg rounded-tl-lg rounded-bl-sm">
+        {message}
+      </div>
+      <div className="flex flex-col">
+        <Button>
+          <FontAwesomeIcon
+            icon={faCopy}
+            className="text-sm text-muted-foreground"
+          />
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 const ConversationPage = () => {
   const [selectedMode, setSelectedMode] = useState("all")
 
@@ -115,7 +153,14 @@ const ConversationPage = () => {
         </TabsList>
       </Tabs>
       <div className="flex flex-col flex-1 justify-between space-y-4 md:flex-col-reverse md:justify-end">
-        <div className="flex flex-col items-center justify-center w-full">
+        {/* Messages */}
+        <ScrollArea className={"flex flex-col space-y-4"}>
+          <BotMessage message={"Hello"} />
+          <UserMessage message={"Hello"} />
+        </ScrollArea>
+
+        {/* Suggestions */}
+        {/* <div className="flex flex-col items-center justify-center w-full">
           <h2 className="text-muted-foreground font-medium py-4">
             Here are some Suggestions:
           </h2>
@@ -131,7 +176,7 @@ const ConversationPage = () => {
               </Card>
             ))}
           </div>
-        </div>
+        </div> */}
         <Form {...form}>
           <Card className="w-full py-1 px-2 md:px-4">
             <form
