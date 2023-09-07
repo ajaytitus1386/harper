@@ -57,7 +57,7 @@ const Sidebar: React.FC<Props> = ({
   return (
     <div
       className={[
-        "absolute top-0 md:relative h-full flex flex-col justify-between py-4 w-72 bg-primary-300 transition-all duration-300 ease-in-out overflow-hidden",
+        "absolute top-0 md:relative h-full flex flex-col justify-between py-4 w-72 bg-primary-300 transition-all duration-300 ease-in-out overflow-hidden z-20",
         isSidebarOpen ? "left-0 md:left-auto" : "-left-full md:left-auto",
       ].join(" ")}
       onTouchStart={detectSlideStart}
