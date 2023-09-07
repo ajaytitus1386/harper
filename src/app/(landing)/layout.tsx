@@ -31,7 +31,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
     isSplash ? "opacity-0" : "opacity-100"
   }`
 
-  const animatedBokehElipsesClassName = `transition-[transform_opacity] duration-500 delay-1500 ${
+  const animatedBokehElipsesClassName = `transition-all duration-500 delay-1000 ${
     isSplash ? "opacity-0 -translate-y-full" : "opacity-100 -translate-y-0"
   }`
 
