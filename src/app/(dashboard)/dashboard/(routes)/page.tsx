@@ -72,7 +72,7 @@ const ToolCard = ({ tool }: { tool: HarperTool }) => {
 const DashboardPage = () => {
   return (
     <div className="flex flex-col items-center justify-start w-full mt-6">
-      <h1 className="text-xl md:text-3xl font-bold text-center">
+      <h1 className="text-xl md:text-3xl font-bold">
         What will you compose today?
       </h1>
       <p className="text-muted-foreground font-light text-sm md:text-base text-center">
