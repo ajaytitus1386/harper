@@ -19,8 +19,8 @@ export const conversationModes: ConversationMode[] = [
     systemPrompt: "All",
     suggestions: [
       "Can you suggest a quick and effective workout routine?",
-      "Find a great destination within a 5-hour drive from my location.",
       "Suggest a delicious and healthy recipe I can make for dinner.",
+      "Plan a trip itenary for my upcoming vacation.",
     ],
   },
   {
