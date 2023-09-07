@@ -32,7 +32,6 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
         ? 60
         : 80
     )
-    console.log(breakpoints)
   }, [breakpoints])
 
   const arrayOfChildren = Children.toArray(children)
@@ -52,7 +51,6 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
   const enterFocus = (child: React.ReactElement) => {
     setIsFocused(true)
     setSelectedChild(child)
-    console.log("entered")
 
     if (!child?.props) return
   }
@@ -60,7 +58,6 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
   const exitFocus = () => {
     setIsFocused(false)
     setSelectedChild(null)
-    console.log("exited")
   }
 
   const toggleFocus = (child: React.ReactElement) => {
