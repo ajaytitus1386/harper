@@ -33,6 +33,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { conversationModes, converstaionFormSchema } from "./constant"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { getConversationCompletion } from "@/services/conversation"
 
 const BotMessage = ({ message }: { message: string }) => {
   return (
@@ -55,7 +56,7 @@ const BotMessage = ({ message }: { message: string }) => {
 const UserMessage = ({ message }: { message: string }) => {
   return (
     <div className="flex w-full sm:w-1/2 md:w-[400px] px-4 py-2 space-x-2 mr-auto">
-      <div className="flex flex-1 px-2 py-1 bg-gray-50 text-black rounded-r-lg rounded-tl-lg rounded-bl-sm">
+      <div className="flex flex-1 px-2 py-1 bg-gray-100 text-black rounded-r-lg rounded-tl-lg rounded-bl-sm">
         {message}
       </div>
       <div className="flex flex-col">
@@ -70,8 +71,14 @@ const UserMessage = ({ message }: { message: string }) => {
   )
 }
 
+type ConversationMessage = {
+  message: string
+  sender: "bot" | "user"
+}
+
 const ConversationPage = () => {
   const [selectedMode, setSelectedMode] = useState("all")
+  const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
 
   const changeSelectedMode = (mode: string) => {
     setSelectedMode(mode)
@@ -91,7 +98,21 @@ const ConversationPage = () => {
 
   const isLoading = form.formState.isSubmitting
 
-  const onSubmit = async (values: z.infer<typeof converstaionFormSchema>) => {}
+  const onSubmit = async (values: z.infer<typeof converstaionFormSchema>) => {
+    setMessagesState((prev) => [
+      ...prev,
+      { message: values.prompt, sender: "user" },
+    ])
+
+    form.setValue("prompt", "")
+
+    const response = await getConversationCompletion(values.prompt)
+
+    setMessagesState((prev) => [
+      ...prev,
+      { message: response.output.join(""), sender: "bot" },
+    ])
+  }
 
   return (
     <div className="flex flex-col w-full gap-y-2">
@@ -152,31 +173,39 @@ const ConversationPage = () => {
           ))}
         </TabsList>
       </Tabs>
-      <div className="flex flex-col flex-1 justify-between space-y-4 md:flex-col-reverse md:justify-end">
-        {/* Messages */}
-        <ScrollArea className={"flex flex-col space-y-4"}>
-          <BotMessage message={"Hello"} />
-          <UserMessage message={"Hello"} />
-        </ScrollArea>
-
-        {/* Suggestions */}
-        {/* <div className="flex flex-col items-center justify-center w-full">
-          <h2 className="text-muted-foreground font-medium py-4">
-            Here are some Suggestions:
-          </h2>
-          <div className="flex flex-col space-y-2 md:space-y-4">
-            {suggestions?.map((suggestion, index) => (
-              <Card
-                key={`suggestion_${index}`}
-                className="bg-gray-50 shadow-md"
-              >
-                <CardContent className="text-muted-foreground font-light text-sm text-center flex items-center justify-center p-6">
-                  {suggestion}
-                </CardContent>
-              </Card>
-            ))}
+      <div className="flex flex-col flex-1 overflow-hidden justify-between space-y-4 md:flex-col-reverse md:justify-end">
+        {messagesState.length > 0 ? (
+          // Messages
+          <ScrollArea className={"flex flex-col space-y-4"}>
+            {messagesState.map(({ message, sender }, index) =>
+              sender === "bot" ? (
+                <BotMessage key={`message_${index}`} message={message} />
+              ) : (
+                <UserMessage key={`message_${index}`} message={message} />
+              )
+            )}
+          </ScrollArea>
+        ) : (
+          // Suggestions
+          <div className="flex flex-col items-center justify-center w-full">
+            <h2 className="text-muted-foreground font-medium py-4">
+              Here are some Suggestions:
+            </h2>
+            <div className="flex flex-col space-y-2 md:space-y-4">
+              {suggestions?.map((suggestion, index) => (
+                <Card
+                  key={`suggestion_${index}`}
+                  className="bg-gray-50 shadow-md"
+                >
+                  <CardContent className="text-muted-foreground font-light text-sm text-center flex items-center justify-center p-6">
+                    {suggestion}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div> */}
+        )}
+
         <Form {...form}>
           <Card className="w-full py-1 px-2 md:px-4">
             <form
