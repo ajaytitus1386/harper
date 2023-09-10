@@ -23,7 +23,7 @@ export type PredictionResponse = {
   }
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 /**
  * Recursive Function to poll the status of a prediction.

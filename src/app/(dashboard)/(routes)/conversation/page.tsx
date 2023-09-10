@@ -33,7 +33,10 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { conversationModes, converstaionFormSchema } from "./constant"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { getConversationCompletion } from "@/services/conversation"
+import {
+  getConversationCompletion,
+  pollConversationCompletion,
+} from "@/services/conversation"
 
 const BotMessage = ({ message }: { message: string }) => {
   return (
@@ -104,14 +107,26 @@ const ConversationPage = () => {
       { message: values.prompt, sender: "user" },
     ])
 
+    const messageIndex = messagesState.length + 1
+
     form.setValue("prompt", "")
 
     const response = await getConversationCompletion(values.prompt)
 
-    setMessagesState((prev) => [
-      ...prev,
-      { message: response.output.join(""), sender: "bot" },
-    ])
+    // Poll the output from replicate each time till it is completed
+    await pollConversationCompletion({
+      prediction: response,
+      setOutput: (predOutput) => {
+        setMessagesState((prev) => {
+          const prevMessages = [...prev]
+          prevMessages[messageIndex] = {
+            message: predOutput.output.join(""),
+            sender: "bot",
+          }
+          return prevMessages
+        })
+      },
+    })
   }
 
   return (
@@ -173,7 +188,7 @@ const ConversationPage = () => {
           ))}
         </TabsList>
       </Tabs>
-      <div className="flex flex-col flex-1 overflow-hidden justify-between space-y-4 md:flex-col-reverse md:justify-end">
+      <div className="flex flex-col h-full max-h-full overflow-hidden justify-between space-y-4 md:flex-col-reverse md:justify-end">
         {messagesState.length > 0 ? (
           // Messages
           <ScrollArea className={"flex flex-col space-y-4"}>
