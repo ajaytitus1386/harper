@@ -64,7 +64,7 @@ module.exports = {
         },
         routes: {
           dashboard: "#ea5753",
-          conversation: "#80CFA9",
+          conversation: "#24B26D",
           settings: "#D8E2DC",
         },
       },
