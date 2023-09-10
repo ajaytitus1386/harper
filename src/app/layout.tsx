@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 
 import { faComments, faCopy } from "@fortawesome/free-regular-svg-icons"
+import { Toaster } from "@/components/ui/toaster"
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -48,6 +49,7 @@ export default function RootLayout({
       <html lang="en" className="h-full">
         <body className={[poppins.className, "h-full"].join(" ")}>
           <AppProvider>{children}</AppProvider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
