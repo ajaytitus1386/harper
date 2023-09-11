@@ -37,6 +37,7 @@ import {
   getConversationCompletion,
   pollConversationCompletion,
 } from "@/services/conversation"
+import ReactMarkdown from "react-markdown"
 
 const BotMessage = ({ message }: { message: string }) => {
   return (
@@ -49,8 +50,8 @@ const BotMessage = ({ message }: { message: string }) => {
           />
         </Button>
       </div>
-      <div className="flex flex-1 px-2 py-1 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
-        {message}
+      <div className="px-2 py-1 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
+        <ReactMarkdown>{message}</ReactMarkdown>
       </div>
     </div>
   )
@@ -82,10 +83,15 @@ type ConversationMessage = {
 const ConversationPage = () => {
   const [selectedMode, setSelectedMode] = useState("all")
   const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
+  const [isCompletionProcessing, setIsCompletionProcessing] = useState(false)
 
   const changeSelectedMode = (mode: string) => {
     setSelectedMode(mode)
   }
+
+  const conversationMode = conversationModes.find(
+    (mode) => mode.name === selectedMode
+  )
 
   const suggestions = conversationModes.find(
     (mode) => mode.name === selectedMode
@@ -99,7 +105,7 @@ const ConversationPage = () => {
     defaultValues,
   })
 
-  const isLoading = form.formState.isSubmitting
+  const isLoading = form.formState.isSubmitting && isCompletionProcessing
 
   const onSubmit = async (values: z.infer<typeof converstaionFormSchema>) => {
     setMessagesState((prev) => [
@@ -111,7 +117,25 @@ const ConversationPage = () => {
 
     form.setValue("prompt", "")
 
-    const response = await getConversationCompletion(values.prompt)
+    setIsCompletionProcessing(true)
+
+    // Format the system prompt + messages sent + new prompt
+
+    const pastMessages = messagesState.map((message) => {
+      if (message.sender === "user") {
+        return "[INST] " + message.message + " [/INST]"
+      } else return message.message
+    })
+
+    const formattedPrompt =
+      conversationMode?.systemPrompt +
+      " " +
+      pastMessages.join(" ") +
+      " " +
+      ("[INST] " + values.prompt + " [/INST]")
+
+    // Get the completion from replicate
+    const response = await getConversationCompletion(formattedPrompt)
 
     // Poll the output from replicate each time till it is completed
     await pollConversationCompletion({
@@ -127,6 +151,8 @@ const ConversationPage = () => {
         })
       },
     })
+
+    setIsCompletionProcessing(false)
   }
 
   return (
