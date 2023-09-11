@@ -43,7 +43,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
         <main
           onTouchStart={detectSlideStart}
           onTouchEnd={detectSlideEnd}
-          className="flex h-full w-full py-4 px-4 md:py-8 md:px-12 lg:px-32"
+          className="flex h-full w-full py-4 px-4 md:py-8 md:px-12 lg:px-32 "
         >
           {children}
         </main>
