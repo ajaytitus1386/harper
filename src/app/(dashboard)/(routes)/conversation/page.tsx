@@ -35,7 +35,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ReactMarkdown from "react-markdown"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import FadeLoader from "react-spinners/FadeLoader"
+import PulseLoader from "react-spinners/PulseLoader"
 
 import { conversationModes, converstaionFormSchema } from "./constant"
 import {
@@ -309,24 +309,25 @@ const ConversationPage = () => {
                   </FormItem>
                 )}
               />
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="rounded-full w-8 h-8 md:w-10 md:h-10 bg-routes-conversation"
-              >
-                {isLoading ? (
-                  <FadeLoader
-                    color={"#ffffff"}
-                    loading={isLoading}
-                    speedMultiplier={0.5}
-                  />
-                ) : (
+              {isLoading ? (
+                <PulseLoader
+                  color="#aaaaaa"
+                  loading={isLoading}
+                  speedMultiplier={0.5}
+                  className="scale-50 cursor-wait"
+                />
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="rounded-full w-8 h-8 md:w-10 md:h-10 bg-routes-conversation"
+                >
                   <FontAwesomeIcon
                     icon={faPaperPlane}
                     className="text-white md:text-lg"
                   />
-                )}
-              </Button>
+                </Button>
+              )}
             </form>
           </Card>
         </Form>
