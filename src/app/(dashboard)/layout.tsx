@@ -32,7 +32,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
       />
-      <div className="flex flex-row h-full relative">
+      <div className="flex flex-row h-full overflow-hidden relative">
         {/* Sidebar */}
         <Sidebar
           isSidebarOpen={isSidebarOpen}
