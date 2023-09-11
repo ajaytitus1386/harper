@@ -4,9 +4,10 @@ export const converstaionFormSchema = z.object({
   prompt: z.string().nonempty({
     message: "Prompt is required",
   }),
+  systemPrompt: z.string(),
 })
 
-type ConversationMode = {
+export type ConversationMode = {
   name: string
   label: string
   systemPrompt: string

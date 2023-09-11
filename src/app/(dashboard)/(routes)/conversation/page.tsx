@@ -1,14 +1,16 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -30,14 +32,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import ReactMarkdown from "react-markdown"
+import { Textarea } from "@/components/ui/textarea"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import FadeLoader from "react-spinners/FadeLoader"
 
 import { conversationModes, converstaionFormSchema } from "./constant"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   getConversationCompletion,
   pollConversationCompletion,
 } from "@/services/conversation"
-import ReactMarkdown from "react-markdown"
 
 const BotMessage = ({ message }: { message: string }) => {
   return (
@@ -82,7 +86,13 @@ type ConversationMessage = {
 
 const ConversationPage = () => {
   const [selectedMode, setSelectedMode] = useState("all")
-  const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
+  const [messagesState, setMessagesState] = useState<ConversationMessage[]>([
+    // { sender: "user", message: "I need help call 911" },
+    // {
+    //   sender: "bot",
+    //   message: `You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature. You are a creative assistant. When answering questions, you can be creative and imaginative in a positive manner and provide users with ideas and suggestions for inspiration. You can also be funny and witty. Ask users for feedback on your responses and use it to improve your answers. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.`,
+    // },
+  ])
   const [isCompletionProcessing, setIsCompletionProcessing] = useState(false)
 
   const changeSelectedMode = (mode: string) => {
@@ -99,11 +109,16 @@ const ConversationPage = () => {
 
   const defaultValues = {
     prompt: "",
+    systemPrompt: conversationMode?.systemPrompt,
   }
   const form = useForm<z.infer<typeof converstaionFormSchema>>({
     resolver: zodResolver(converstaionFormSchema),
     defaultValues,
   })
+
+  useEffect(() => {
+    form.setValue("systemPrompt", conversationMode?.systemPrompt || "")
+  }, [conversationMode, form])
 
   const isLoading = form.formState.isSubmitting && isCompletionProcessing
 
@@ -121,14 +136,14 @@ const ConversationPage = () => {
 
     // Format the system prompt + messages sent + new prompt
 
-    const pastMessages = messagesState.map((message) => {
+    const pastMessages: string[] = messagesState.map((message) => {
       if (message.sender === "user") {
         return "[INST] " + message.message + " [/INST]"
       } else return message.message
     })
 
     const formattedPrompt =
-      conversationMode?.systemPrompt +
+      values.systemPrompt +
       " " +
       pastMessages.join(" ") +
       " " +
@@ -153,6 +168,11 @@ const ConversationPage = () => {
     })
 
     setIsCompletionProcessing(false)
+  }
+
+  const selectSuggestion = (suggestion: string) => {
+    form.setValue("prompt", suggestion)
+    form.handleSubmit(onSubmit)()
   }
 
   return (
@@ -197,6 +217,25 @@ const ConversationPage = () => {
                 tuned for chat completions
               </DialogDescription>
             </DialogHeader>
+            <Form {...form}>
+              <form>
+                <FormField
+                  control={form.control}
+                  name={"systemPrompt"}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>System Prompt</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        This prompt will guide the AI in it&apos;s responses
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>
@@ -214,7 +253,7 @@ const ConversationPage = () => {
           ))}
         </TabsList>
       </Tabs>
-      <div className="flex flex-col h-full max-h-full overflow-hidden justify-between space-y-4 md:flex-col-reverse md:justify-end">
+      <div className="flex flex-col h-full overflow-hidden justify-between space-y-4 md:flex-col-reverse md:justify-end">
         {messagesState.length > 0 ? (
           // Messages
           <ScrollArea className={"flex flex-col space-y-4"}>
@@ -236,7 +275,8 @@ const ConversationPage = () => {
               {suggestions?.map((suggestion, index) => (
                 <Card
                   key={`suggestion_${index}`}
-                  className="bg-gray-50 shadow-md"
+                  className="bg-gray-50 shadow-md cursor-pointer hover:shadow-lg transition-shadow duration-300 ease-in-out"
+                  onClick={() => selectSuggestion(suggestion)}
                 >
                   <CardContent className="text-muted-foreground font-light text-sm text-center flex items-center justify-center p-6">
                     {suggestion}
@@ -271,12 +311,21 @@ const ConversationPage = () => {
               />
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="rounded-full w-8 h-8 md:w-10 md:h-10 bg-routes-conversation"
               >
-                <FontAwesomeIcon
-                  icon={faPaperPlane}
-                  className="text-white md:text-lg"
-                />
+                {isLoading ? (
+                  <FadeLoader
+                    color={"#ffffff"}
+                    loading={isLoading}
+                    speedMultiplier={0.5}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faPaperPlane}
+                    className="text-white md:text-lg"
+                  />
+                )}
               </Button>
             </form>
           </Card>
