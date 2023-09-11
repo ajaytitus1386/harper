@@ -1,9 +1,4 @@
-import {
-  PredictionRequest,
-  PredictionResponse,
-  pollPredictionStatus,
-  sleep,
-} from "./common"
+import { PredictionRequest, PredictionResponse, sleep } from "./common"
 
 export const getConversationCompletion = async (prompt: string) => {
   const response = await fetch("/api/conversation", {
