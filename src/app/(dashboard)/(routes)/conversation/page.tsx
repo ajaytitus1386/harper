@@ -54,7 +54,7 @@ const BotMessage = ({ message }: { message: string }) => {
           />
         </Button>
       </div>
-      <div className="px-2 py-1 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
+      <div className="px-4 py-2 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
         <ReactMarkdown>{message}</ReactMarkdown>
       </div>
     </div>
@@ -64,7 +64,7 @@ const BotMessage = ({ message }: { message: string }) => {
 const UserMessage = ({ message }: { message: string }) => {
   return (
     <div className="flex w-full sm:w-1/2 md:w-[400px] px-4 py-2 space-x-2 mr-auto">
-      <div className="flex flex-1 px-2 py-1 bg-gray-100 text-black rounded-r-lg rounded-tl-lg rounded-bl-sm">
+      <div className="flex flex-1 px-4 py-2 bg-gray-100 text-black rounded-r-lg rounded-tl-lg rounded-bl-sm">
         {message}
       </div>
       <div className="flex flex-col">
@@ -86,14 +86,9 @@ type ConversationMessage = {
 
 const ConversationPage = () => {
   const [selectedMode, setSelectedMode] = useState("all")
-  const [messagesState, setMessagesState] = useState<ConversationMessage[]>([
-    // { sender: "user", message: "I need help call 911" },
-    // {
-    //   sender: "bot",
-    //   message: `You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature. You are a creative assistant. When answering questions, you can be creative and imaginative in a positive manner and provide users with ideas and suggestions for inspiration. You can also be funny and witty. Ask users for feedback on your responses and use it to improve your answers. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.`,
-    // },
-  ])
+  const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
   const [isCompletionProcessing, setIsCompletionProcessing] = useState(false)
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false)
 
   const changeSelectedMode = (mode: string) => {
     setSelectedMode(mode)
@@ -116,9 +111,17 @@ const ConversationPage = () => {
     defaultValues,
   })
 
+  // Update System prompt when mode changes
   useEffect(() => {
     form.setValue("systemPrompt", conversationMode?.systemPrompt || "")
   }, [conversationMode, form])
+
+  // If custom mode selected, open settings dialog
+  useEffect(() => {
+    if (selectedMode === "custom") {
+      setIsSettingsDialogOpen(true)
+    }
+  }, [selectedMode])
 
   const isLoading = form.formState.isSubmitting && isCompletionProcessing
 
@@ -187,7 +190,11 @@ const ConversationPage = () => {
           <h1 className="text-black text-lg font-bold">Conversation</h1>
         </div>
         {/* Settings */}
-        <Dialog modal>
+        <Dialog
+          modal
+          open={isSettingsDialogOpen}
+          onOpenChange={setIsSettingsDialogOpen}
+        >
           <DialogTrigger>
             <FontAwesomeIcon
               icon={faGear}
