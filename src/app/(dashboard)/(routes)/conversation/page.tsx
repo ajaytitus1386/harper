@@ -42,12 +42,24 @@ import {
   getConversationCompletion,
   pollConversationCompletion,
 } from "@/services/conversation"
+import { useToast } from "@/components/ui/use-toast"
 
 const BotMessage = ({ message }: { message: string }) => {
+  const { toast } = useToast()
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(message)
+    toast({
+      title: "Copied!",
+      description: "The message has been copied to your clipboard",
+      duration: 3000,
+    })
+  }
+
   return (
     <div className="flex w-full sm:w-1/2 md:w-[400px] px-4 py-2 space-x-2 ml-auto">
       <div className="flex flex-col">
-        <Button>
+        <Button onClick={copyToClipboard}>
           <FontAwesomeIcon
             icon={faCopy}
             className="text-sm text-muted-foreground"
@@ -62,13 +74,24 @@ const BotMessage = ({ message }: { message: string }) => {
 }
 
 const UserMessage = ({ message }: { message: string }) => {
+  const { toast } = useToast()
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(message)
+    toast({
+      title: "Copied!",
+      description: "The message has been copied to your clipboard",
+      duration: 3000,
+    })
+  }
+
   return (
     <div className="flex w-full sm:w-1/2 md:w-[400px] px-4 py-2 space-x-2 mr-auto">
       <div className="flex flex-1 px-4 py-2 bg-gray-100 text-black rounded-r-lg rounded-tl-lg rounded-bl-sm">
         {message}
       </div>
       <div className="flex flex-col">
-        <Button>
+        <Button onClick={copyToClipboard}>
           <FontAwesomeIcon
             icon={faCopy}
             className="text-sm text-muted-foreground"
