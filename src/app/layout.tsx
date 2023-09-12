@@ -13,9 +13,9 @@ import {
   faPaperPlane,
   faUpRightFromSquare,
   faMusic,
-  faIdBadge,
   faImage,
   faComments,
+  faIdCardClip,
 } from "@fortawesome/free-solid-svg-icons"
 
 import { faCopy } from "@fortawesome/free-regular-svg-icons"
@@ -42,8 +42,8 @@ library.add(
   faUpRightFromSquare,
   faCopy,
   faMusic,
-  faIdBadge,
-  faImage
+  faImage,
+  faIdCardClip
 )
 
 export default function RootLayout({

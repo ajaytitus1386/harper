@@ -65,6 +65,9 @@ module.exports = {
         routes: {
           dashboard: "#ea5753",
           conversation: "#24B26D",
+          composer: "#007E8F",
+          illustrator: "#8D5A97",
+          emoji: "#A64253",
           settings: "#D8E2DC",
         },
       },

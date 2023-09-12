@@ -1,6 +1,13 @@
 import React from "react"
-import { faGear, faLayerGroup } from "@fortawesome/free-solid-svg-icons"
-import { faComments } from "@fortawesome/free-regular-svg-icons"
+import {
+  faGear,
+  faImage,
+  faLayerGroup,
+  faMusic,
+  faComments,
+  faIdCardClip,
+} from "@fortawesome/free-solid-svg-icons"
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -35,6 +42,30 @@ export const routes: HarperRoute[] = [
     color: "text-routes-conversation",
     Icon: (color: string) => (
       <FontAwesomeIcon icon={faComments} className={`${color} text-xl w-8`} />
+    ),
+  },
+  {
+    label: "Composer",
+    href: "/composer",
+    color: "text-routes-composer",
+    Icon: (color: string) => (
+      <FontAwesomeIcon icon={faMusic} className={`${color} text-xl w-8`} />
+    ),
+  },
+  {
+    label: "Illustrator",
+    href: "/illustrator",
+    color: "text-routes-illustrator",
+    Icon: (color: string) => (
+      <FontAwesomeIcon icon={faImage} className={`${color} text-xl w-8`} />
+    ),
+  },
+  {
+    label: "Impression",
+    href: "/impression",
+    color: "text-routes-impression",
+    Icon: (color: string) => (
+      <FontAwesomeIcon icon={faIdCardClip} className={`${color} text-xl w-8`} />
     ),
   },
   {
