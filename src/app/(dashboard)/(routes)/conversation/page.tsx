@@ -20,8 +20,9 @@ import {
   faGear,
   faPaperPlane,
   faUpRightFromSquare,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons"
-import { faComments, faCopy } from "@fortawesome/free-regular-svg-icons"
+import { faCopy } from "@fortawesome/free-regular-svg-icons"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,

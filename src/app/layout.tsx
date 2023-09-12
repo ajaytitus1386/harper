@@ -12,9 +12,13 @@ import {
   faArrowRight,
   faPaperPlane,
   faUpRightFromSquare,
+  faMusic,
+  faIdBadge,
+  faImage,
+  faComments,
 } from "@fortawesome/free-solid-svg-icons"
 
-import { faComments, faCopy } from "@fortawesome/free-regular-svg-icons"
+import { faCopy } from "@fortawesome/free-regular-svg-icons"
 import { Toaster } from "@/components/ui/toaster"
 
 const poppins = Poppins({
@@ -36,7 +40,10 @@ library.add(
   faArrowRight,
   faPaperPlane,
   faUpRightFromSquare,
-  faCopy
+  faCopy,
+  faMusic,
+  faIdBadge,
+  faImage
 )
 
 export default function RootLayout({

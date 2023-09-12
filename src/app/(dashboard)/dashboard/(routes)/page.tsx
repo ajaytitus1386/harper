@@ -2,8 +2,7 @@
 
 import { HarperRoute } from "@/components/dashboard/sidebar"
 import { Card } from "@/components/ui/card"
-import { faComments } from "@fortawesome/free-regular-svg-icons"
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
+import { faArrowRight, faComments } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
 import React, { useState } from "react"
