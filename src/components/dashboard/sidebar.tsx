@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { Separator } from "../ui/separator"
 
 interface Props {
   isSidebarOpen: boolean
@@ -28,14 +29,6 @@ export interface HarperRoute {
 }
 
 export const routes: HarperRoute[] = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    color: "text-routes-dashboard",
-    Icon: (color: string) => (
-      <FontAwesomeIcon icon={faLayerGroup} className={`${color} text-xl w-8`} />
-    ),
-  },
   {
     label: "Conversation",
     href: "/conversation",
@@ -68,23 +61,30 @@ export const routes: HarperRoute[] = [
       <FontAwesomeIcon icon={faIdCardClip} className={`${color} text-xl w-8`} />
     ),
   },
-  {
-    label: "Settings",
-    href: "/settings",
-    color: "text-routes-settings",
-    Icon: (color: string) => (
-      <FontAwesomeIcon icon={faGear} className={`${color} text-xl w-8`} />
-    ),
-  },
 ]
+
+const SidebarLink = ({ href, label, color, Icon }: HarperRoute) => {
+  const pathname = usePathname()
+  return (
+    <Link
+      key={href}
+      href={href}
+      className={cn(
+        "flex items-center justify-start rounded-lg gap-x-2 hover:bg-primary-100 px-2 py-2",
+        pathname === href && "bg-primary-100"
+      )}
+    >
+      {Icon(color)}
+      <h2 className="text-white text-lg">{label}</h2>
+    </Link>
+  )
+}
 
 const Sidebar: React.FC<Props> = ({
   isSidebarOpen,
   detectSlideStart,
   detectSlideEnd,
 }) => {
-  const pathname = usePathname()
-
   return (
     <div
       className={[
@@ -95,19 +95,31 @@ const Sidebar: React.FC<Props> = ({
       onTouchEnd={detectSlideEnd}
     >
       <div className="flex flex-col gap-y-2 px-2 py-8 overflow-auto">
+        <SidebarLink
+          label="Dashboard"
+          href="/dashboard"
+          color="text-routes-dashboard"
+          Icon={(color: string) => (
+            <FontAwesomeIcon
+              icon={faLayerGroup}
+              className={`${color} text-xl w-8`}
+            />
+          )}
+        />
+        <Separator className="px-2 bg-gray-600" />
+        <h1 className="text-gray-400 ml-2 font-light text-sm">Tools</h1>
         {routes.map((route) => (
-          <Link
-            key={route.href}
-            href={route.href}
-            className={cn(
-              "flex items-center justify-start rounded-lg gap-x-2 hover:bg-primary-100 px-2 py-2",
-              pathname === route.href && "bg-primary-100"
-            )}
-          >
-            {route.Icon(route.color)}
-            <h2 className="text-white text-lg">{route.label}</h2>
-          </Link>
+          <SidebarLink key={route.href} {...route} />
         ))}
+        <Separator className="px-2 bg-gray-600" />
+        <SidebarLink
+          label="Settings"
+          href="/settings"
+          color="text-routes-settings"
+          Icon={(color: string) => (
+            <FontAwesomeIcon icon={faGear} className={`${color} text-xl w-8`} />
+          )}
+        />
       </div>
       <p className="text-white text-center w-full">
         Made with Passion &#10084;
