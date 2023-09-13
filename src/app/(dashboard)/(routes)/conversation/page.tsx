@@ -43,7 +43,7 @@ import {
   getConversationCompletion,
   pollConversationCompletion,
 } from "@/services/conversation"
-import { useToast } from "@/components/ui/use-toast"
+import { toast, useToast } from "@/components/ui/use-toast"
 
 const BotMessage = ({ message }: { message: string }) => {
   const { toast } = useToast()
@@ -178,6 +178,15 @@ const ConversationPage = () => {
 
     // Get the completion from replicate
     const response = await getConversationCompletion(formattedPrompt)
+
+    if (!response) {
+      toast({
+        title: "Error!",
+        description: "Something went wrong, please try again later",
+        duration: 3000,
+      })
+      return
+    }
 
     // Poll the output from replicate each time till it is completed
     await pollConversationCompletion({
