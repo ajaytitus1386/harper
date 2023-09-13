@@ -1,16 +1,11 @@
 import axios from "axios"
 import { PredictionRequest, PredictionResponse, sleep } from "./common"
-import { auth } from "@clerk/nextjs/server"
 
 export const getConversationCompletion = async (prompt: string) => {
-  const { userId } = { userId: "yeah" }
-  if (!userId) return null
-
   const response = await axios.post(
     "/api/conversation",
     {
       prompt,
-      userId,
     },
     {
       headers: {
