@@ -44,6 +44,7 @@ import {
   pollConversationCompletion,
 } from "@/services/conversation"
 import { toast, useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
 
 const BotMessage = ({ message }: { message: string }) => {
   const { toast } = useToast()
@@ -109,6 +110,7 @@ type ConversationMessage = {
 }
 
 const ConversationPage = () => {
+  const router = useRouter()
   const [selectedMode, setSelectedMode] = useState("all")
   const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
   const [isCompletionProcessing, setIsCompletionProcessing] = useState(false)
@@ -204,6 +206,9 @@ const ConversationPage = () => {
     })
 
     setIsCompletionProcessing(false)
+
+    // Refresh router to trigger any UI changes
+    router.refresh()
   }
 
   const selectSuggestion = (suggestion: string) => {
