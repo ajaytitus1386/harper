@@ -20,9 +20,9 @@ export async function POST(req: NextRequest) {
     return new NextResponse("Unauthorized", { status: 401 })
   }
 
-  const userCreditCount = await getApiCredits({ userId })
+  const { usedCredits, totalCredits } = await getApiCredits({ userId })
 
-  if (!userCreditCount) {
+  if (usedCredits >= totalCredits) {
     return new NextResponse("User API limit reached", { status: 403 })
   }
 

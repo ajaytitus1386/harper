@@ -13,55 +13,7 @@ type ApiSetCreditsRequest = ApiCreditsRequest & {
   credits: number
 }
 
-/**
- * Increases the API limit count by 1 for the user.
- */
-export const increaseApiLimit = async ({ userId }: ApiLimitRequest) => {
-  const userApiLimit = await prismadb.userApiLimit.findUnique({
-    where: { userId },
-  })
-
-  if (!userApiLimit) {
-    await prismadb.userApiLimit.create({
-      data: {
-        userId,
-        count: 1,
-      },
-    })
-  } else {
-    await prismadb.userApiLimit.update({
-      where: { userId },
-      data: {
-        count: userApiLimit.count + 1,
-      },
-    })
-  }
-}
-
-/**
- * Returns true if the user has not exceeded the free API limit.
- */
-export const checkApiLimit = async ({ userId }: ApiLimitRequest) => {
-  const userApiLimit = await prismadb.userApiLimit.findUnique({
-    where: { userId },
-  })
-
-  if (!userApiLimit) return true
-
-  return userApiLimit.count < MAX_FREE_COUNTS
-}
-
-export const getApiLimit = async ({ userId }: ApiLimitRequest) => {
-  const userApiLimit = await prismadb.userApiLimit.findUnique({
-    where: { userId },
-  })
-
-  if (!userApiLimit) return 0
-
-  return userApiLimit.count
-}
-
-export const addApiCredits = async ({
+export const addToApiTotalCredits = async ({
   userId,
   credits,
 }: ApiSetCreditsRequest) => {
@@ -73,20 +25,21 @@ export const addApiCredits = async ({
     await prismadb.userApiLimit.create({
       data: {
         userId,
-        credits: INITIAL_FREE_CREDITS + credits,
+        usedCredits: 0,
+        totalCredits: INITIAL_FREE_CREDITS + credits,
       },
     })
   } else {
     await prismadb.userApiLimit.update({
       where: { userId },
       data: {
-        credits: userApiLimit.credits + credits,
+        totalCredits: userApiLimit.totalCredits + credits,
       },
     })
   }
 }
 
-export const subtractApiCredits = async ({
+export const addToApiUsedCredits = async ({
   userId,
   credits,
 }: ApiSetCreditsRequest) => {
@@ -98,17 +51,15 @@ export const subtractApiCredits = async ({
     await prismadb.userApiLimit.create({
       data: {
         userId,
-        credits:
-          INITIAL_FREE_CREDITS - credits < 0
-            ? 0
-            : INITIAL_FREE_CREDITS - credits,
+        usedCredits: credits,
+        totalCredits: INITIAL_FREE_CREDITS,
       },
     })
   } else {
     await prismadb.userApiLimit.update({
       where: { userId },
       data: {
-        credits: userApiLimit.credits - credits,
+        usedCredits: userApiLimit.usedCredits + credits,
       },
     })
   }
@@ -123,12 +74,16 @@ export const getApiCredits = async ({ userId }: ApiCreditsRequest) => {
     await prismadb.userApiLimit.create({
       data: {
         userId,
-        credits: INITIAL_FREE_CREDITS,
+        totalCredits: INITIAL_FREE_CREDITS,
+        usedCredits: 0,
       },
     })
 
-    return INITIAL_FREE_CREDITS
+    return { usedCredits: 0, totalCredits: INITIAL_FREE_CREDITS }
   }
 
-  return userApiLimit.credits
+  return {
+    usedCredits: userApiLimit.usedCredits,
+    totalCredits: userApiLimit.totalCredits,
+  }
 }
