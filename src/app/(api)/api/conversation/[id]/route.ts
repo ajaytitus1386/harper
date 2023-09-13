@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import axios from "axios"
+import { auth } from "@clerk/nextjs/server"
+import { subtractApiCredits } from "@/lib/api-limits"
 
 export async function GET(
   req: NextRequest,
@@ -7,6 +9,11 @@ export async function GET(
 ) {
   if (req.method !== "GET") {
     return new NextResponse("Method not allowed", { status: 405 })
+  }
+
+  const { userId } = auth()
+  if (!userId) {
+    return new NextResponse("Unauthorized", { status: 401 })
   }
 
   const response = await axios.get(
@@ -24,5 +31,11 @@ export async function GET(
   }
 
   const prediction = response.data
+
+  // If the prediction is complete, charge the users credits
+  if (prediction.status === "succeeded" || prediction.status === "failed") {
+    await subtractApiCredits({ userId, credits: prediction?.output?.length })
+  }
+
   return new NextResponse(JSON.stringify(prediction))
 }

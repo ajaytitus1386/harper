@@ -98,7 +98,10 @@ export const subtractApiCredits = async ({
     await prismadb.userApiLimit.create({
       data: {
         userId,
-        credits: INITIAL_FREE_CREDITS - credits,
+        credits:
+          INITIAL_FREE_CREDITS - credits < 0
+            ? 0
+            : INITIAL_FREE_CREDITS - credits,
       },
     })
   } else {
