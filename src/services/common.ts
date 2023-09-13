@@ -1,3 +1,5 @@
+import axios from "axios"
+
 export type PredictionRequest = {
   id: string
   status: string
@@ -41,10 +43,9 @@ export const pollPredictionStatus: (
   // sleep
   await sleep(2000)
   //
-  const response = await fetch("/api" + apiRoute + "/" + prediction.id, {
-    method: "GET",
-  })
-  const json: PredictionResponse = await response.json()
+  const response = await axios.get("/api" + apiRoute + "/" + prediction.id)
+
+  const json: PredictionResponse = response.data
   if (response.status !== 200) {
     console.log("error in polling", response)
   }

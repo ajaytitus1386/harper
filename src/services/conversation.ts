@@ -1,23 +1,27 @@
+import axios from "axios"
 import { PredictionRequest, PredictionResponse, sleep } from "./common"
+import { auth } from "@clerk/nextjs"
 
 export const getConversationCompletion = async (prompt: string) => {
-  const response = await fetch("/api/conversation", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      prompt,
-    }),
-  })
+  const { userId } = auth()
+  if (!userId) return null
 
-  let prediction: PredictionRequest = await response.json()
+  const response = await axios.post(
+    "/api/conversation",
+    {
+      prompt,
+      userId,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+
+  let prediction: PredictionRequest = response.data
   console.log("The prediction request is: ", prediction)
 
-  // const output = await pollPredictionStatus(prediction, "/conversation")
-  // console.log("The output after polling is: ", output)
-
-  // return output
   return prediction
 }
 
@@ -34,10 +38,9 @@ export const pollConversationCompletion: ({
   // sleep
   await sleep(2000)
   //
-  const response = await fetch("/api/conversation/" + prediction.id, {
-    method: "GET",
-  })
-  const json: PredictionResponse = await response.json()
+  const response = await axios.get("/api/conversation/" + prediction.id)
+
+  const json: PredictionResponse = response.data
   if (response.status !== 200) {
     return null
   }
