@@ -62,6 +62,10 @@ module.exports = {
           400: "#121B2B",
           500: "#06090E",
         },
+        upgrade: {
+          from: "#FF0F7B",
+          to: "#F89B29",
+        },
         routes: {
           dashboard: "#ea5753",
           conversation: "#24B26D",

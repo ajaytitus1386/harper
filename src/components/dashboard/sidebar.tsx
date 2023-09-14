@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react"
 import {
   faGear,
@@ -13,6 +15,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Separator } from "../ui/separator"
+import CreditCounter from "./creditCounter"
 
 interface Props {
   isSidebarOpen: boolean
@@ -121,9 +124,12 @@ const Sidebar: React.FC<Props> = ({
           )}
         />
       </div>
-      <p className="text-white text-center w-full">
-        Made with Passion &#10084;
-      </p>
+      <div className="flex flex-col px-2 gap-y-2">
+        <CreditCounter />
+        {/* <p className="text-white text-center w-full">
+          Made with Passion &#10084;
+        </p> */}
+      </div>
     </div>
   )
 }
