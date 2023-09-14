@@ -1,11 +1,8 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Card, CardContent, CardFooter } from "../ui/card"
 import { Progress } from "../ui/progress"
-import axios, { AxiosResponse } from "axios"
-import { useUser } from "@clerk/nextjs"
-import { UserApiLimit } from "@prisma/client"
 import { Button } from "../ui/button"
 import useUserCredits from "@/hooks/useUserCredits"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
