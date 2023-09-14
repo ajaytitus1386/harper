@@ -45,6 +45,7 @@ import {
 } from "@/services/conversation"
 import { toast, useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
+import { useTransactionModal } from "@/hooks/useTransactionModal"
 
 const BotMessage = ({ message }: { message: string }) => {
   const { toast } = useToast()
@@ -111,6 +112,8 @@ type ConversationMessage = {
 
 const ConversationPage = () => {
   const router = useRouter()
+  const { openModal } = useTransactionModal()
+
   const [selectedMode, setSelectedMode] = useState("all")
   const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
   const [isCompletionProcessing, setIsCompletionProcessing] = useState(false)
@@ -178,37 +181,43 @@ const ConversationPage = () => {
       " " +
       ("[INST] " + values.prompt + " [/INST]")
 
-    // Get the completion from replicate
-    const response = await getConversationCompletion(formattedPrompt)
+    try {
+      // Get the completion from replicate
+      const response = await getConversationCompletion(formattedPrompt)
 
-    if (!response) {
-      toast({
-        title: "Error!",
-        description: "Something went wrong, please try again later",
-        duration: 3000,
-      })
-      return
-    }
-
-    // Poll the output from replicate each time till it is completed
-    await pollConversationCompletion({
-      prediction: response,
-      setOutput: (predOutput) => {
-        setMessagesState((prev) => {
-          const prevMessages = [...prev]
-          prevMessages[messageIndex] = {
-            message: predOutput.output.join(""),
-            sender: "bot",
-          }
-          return prevMessages
+      if (!response) {
+        toast({
+          title: "Error!",
+          description: "Something went wrong, please try again later",
+          duration: 3000,
         })
-      },
-    })
+        return
+      }
 
-    setIsCompletionProcessing(false)
+      // Poll the output from replicate each time till it is completed
+      await pollConversationCompletion({
+        prediction: response,
+        setOutput: (predOutput) => {
+          setMessagesState((prev) => {
+            const prevMessages = [...prev]
+            prevMessages[messageIndex] = {
+              message: predOutput.output.join(""),
+              sender: "bot",
+            }
+            return prevMessages
+          })
+        },
+      })
+    } catch (error: any) {
+      if (error?.response?.status == 403) {
+        openModal()
+      }
+    } finally {
+      setIsCompletionProcessing(false)
 
-    // Refresh router to trigger any UI changes
-    router.refresh()
+      // Refresh router to trigger any UI changes
+      router.refresh()
+    }
   }
 
   const selectSuggestion = (suggestion: string) => {

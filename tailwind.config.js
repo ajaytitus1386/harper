@@ -97,12 +97,21 @@ module.exports = {
           from: { transform: "rotateZ(360deg)" },
           to: { transform: "rotateZ(0deg)" },
         },
+        steam: {
+          "0%, 100%": {
+            "background-position": "0 0",
+          },
+          "50%": {
+            "background-position": "400% 0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         rotate: "clockwise 20s linear infinite",
         "counter-rotate": "counter-clockwise 20s linear infinite",
+        steam: "steam 30s linear infinite",
       },
     },
   },

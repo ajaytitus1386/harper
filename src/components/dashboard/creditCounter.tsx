@@ -7,9 +7,12 @@ import { Button } from "../ui/button"
 import useUserCredits from "@/hooks/useUserCredits"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCoins } from "@fortawesome/free-solid-svg-icons"
+import { useTransactionModal } from "@/hooks/useTransactionModal"
 
 const CreditCounter = () => {
   const { userCredits, isFreeTier } = useUserCredits()
+
+  const { openModal } = useTransactionModal()
 
   const progress = userCredits
     ? (userCredits?.usedCredits / userCredits?.totalCredits) * 100
@@ -29,7 +32,10 @@ const CreditCounter = () => {
 
       <Progress className="h-2" value={progress} />
       <CardFooter className="p-0">
-        <Button className="w-full text-white font-bold px-2 py-1 bg-gradient-to-r from-upgrade-from to-upgrade-to bg-[length:200%_200%] bg-center hover:bg-right transition-all duration-300">
+        <Button
+          onClick={openModal}
+          className="w-full text-white font-bold px-2 py-1 bg-gradient-to-r from-upgrade-from to-upgrade-to bg-[length:200%_200%] bg-center hover:bg-right transition-all duration-300"
+        >
           {isFreeTier ? "Upgrade" : "Add"}
         </Button>
       </CardFooter>
