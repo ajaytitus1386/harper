@@ -2,11 +2,11 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
@@ -50,6 +50,30 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Custom Colors
+        landing: {
+          from: "#ffb88e",
+          to: "#ea5753",
+        },
+        primary: {
+          100: "#1F2C47",
+          200: "#192339",
+          300: "#131A2B",
+          400: "#121B2B",
+          500: "#06090E",
+        },
+        upgrade: {
+          from: "#FF0F7B",
+          to: "#F89B29",
+        },
+        routes: {
+          dashboard: "#ea5753",
+          conversation: "#24B26D",
+          composer: "#007E8F",
+          illustrator: "#8D5A97",
+          impression: "#A64253",
+          settings: "#D8E2DC",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,10 +89,29 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        clockwise: {
+          from: { transform: "rotateZ(0deg)" },
+          to: { transform: "rotateZ(360deg)" },
+        },
+        "counter-clockwise": {
+          from: { transform: "rotateZ(360deg)" },
+          to: { transform: "rotateZ(0deg)" },
+        },
+        steam: {
+          "0%, 100%": {
+            "background-position": "0 0",
+          },
+          "50%": {
+            "background-position": "400% 0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        rotate: "clockwise 20s linear infinite",
+        "counter-rotate": "counter-clockwise 20s linear infinite",
+        steam: "steam 30s linear infinite",
       },
     },
   },

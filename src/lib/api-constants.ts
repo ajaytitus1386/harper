@@ -1,0 +1,5 @@
+export const MAX_FREE_COUNTS = 3
+export const INITIAL_FREE_CREDITS = 50
+
+export const CONVERSATION_TOKENS_PER_CREDIT = 25
+export const CONVERSATION_TOKEN_RATE = 0.0002857 // In USD
