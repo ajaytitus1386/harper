@@ -4,13 +4,15 @@ import React from "react"
 import { Card, CardContent, CardFooter } from "../ui/card"
 import { Progress } from "../ui/progress"
 import { Button } from "../ui/button"
-import useUserCredits from "@/hooks/useUserCredits"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCoins } from "@fortawesome/free-solid-svg-icons"
 import { useTransactionModal } from "@/hooks/useTransactionModal"
+import useUserCredits, { useFetchUserCredits } from "@/hooks/useUserCredits"
 
 const CreditCounter = () => {
   const { userCredits, isFreeTier } = useUserCredits()
+
+  useFetchUserCredits()
 
   const { openModal } = useTransactionModal()
 

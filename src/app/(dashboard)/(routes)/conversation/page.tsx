@@ -46,6 +46,8 @@ import {
 import { toast, useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { useTransactionModal } from "@/hooks/useTransactionModal"
+import { useUser } from "@clerk/nextjs"
+import useUserCredits from "@/hooks/useUserCredits"
 
 const BotMessage = ({ message }: { message: string }) => {
   const { toast } = useToast()
@@ -113,6 +115,9 @@ type ConversationMessage = {
 const ConversationPage = () => {
   const router = useRouter()
   const { openModal } = useTransactionModal()
+  const { user } = useUser()
+
+  const { fetchUserCredits } = useUserCredits()
 
   const [selectedMode, setSelectedMode] = useState("all")
   const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
@@ -217,6 +222,9 @@ const ConversationPage = () => {
 
       // Refresh router to trigger any UI changes
       router.refresh()
+
+      // Call a re-fetch of user credits
+      if (user?.id) fetchUserCredits(user?.id)
     }
   }
 
