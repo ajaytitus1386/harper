@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         "35042c9a33ac8fd5e29e27fb3197f33aa483f72c2ce3b0b9d201155c7fd2a287",
       input: {
         prompt,
-        max_new_tokens: 4,
+        max_new_tokens: 25,
         // max_new_tokens: CONVERSATION_TOKENS_PER_CREDIT * userCreditCount,
       },
     },

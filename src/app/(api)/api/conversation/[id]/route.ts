@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import axios from "axios"
 import { auth } from "@clerk/nextjs/server"
 import { addToApiUsedCredits } from "@/lib/api-limits"
+import { CONVERSATION_TOKENS_PER_CREDIT } from "@/lib/api-constants"
 
 export async function GET(
   req: NextRequest,
@@ -34,7 +35,12 @@ export async function GET(
 
   // If the prediction is complete, charge the users credits
   if (prediction.status === "succeeded" || prediction.status === "failed") {
-    await addToApiUsedCredits({ userId, credits: prediction?.output?.length })
+    await addToApiUsedCredits({
+      userId,
+      credits: Math.floor(
+        prediction?.output?.length / CONVERSATION_TOKENS_PER_CREDIT
+      ),
+    })
   }
 
   return new NextResponse(JSON.stringify(prediction))
