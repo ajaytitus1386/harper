@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Separator } from "../ui/separator"
 import CreditCounter from "./creditCounter"
+import { toolsContent } from "@/content/tools"
 
 interface Props {
   isSidebarOpen: boolean
@@ -26,45 +27,17 @@ interface Props {
 
 export interface HarperRoute {
   label: string
-  Icon: (color: string) => React.JSX.Element
+  Icon: (color: string, className: string) => React.JSX.Element
   href: string
   color: string
 }
 
-export const routes: HarperRoute[] = [
-  {
-    label: "Conversation",
-    href: "/conversation",
-    color: "text-routes-conversation",
-    Icon: (color: string) => (
-      <FontAwesomeIcon icon={faComments} className={`${color} text-xl w-8`} />
-    ),
-  },
-  {
-    label: "Composer",
-    href: "/composer",
-    color: "text-routes-composer",
-    Icon: (color: string) => (
-      <FontAwesomeIcon icon={faMusic} className={`${color} text-xl w-8`} />
-    ),
-  },
-  {
-    label: "Illustrator",
-    href: "/illustrator",
-    color: "text-routes-illustrator",
-    Icon: (color: string) => (
-      <FontAwesomeIcon icon={faImage} className={`${color} text-xl w-8`} />
-    ),
-  },
-  {
-    label: "Impression",
-    href: "/impression",
-    color: "text-routes-impression",
-    Icon: (color: string) => (
-      <FontAwesomeIcon icon={faIdCardClip} className={`${color} text-xl w-8`} />
-    ),
-  },
-]
+export const routes: HarperRoute[] = toolsContent.map((tool) => ({
+  label: tool.label,
+  color: tool.color,
+  href: tool.href,
+  Icon: tool.Icon,
+}))
 
 const SidebarLink = ({ href, label, color, Icon }: HarperRoute) => {
   const pathname = usePathname()
@@ -77,7 +50,7 @@ const SidebarLink = ({ href, label, color, Icon }: HarperRoute) => {
         pathname === href && "bg-primary-100"
       )}
     >
-      {Icon(color)}
+      {Icon(color, "text-xl w-8")}
       <h2 className="text-white text-lg">{label}</h2>
     </Link>
   )

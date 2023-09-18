@@ -87,3 +87,15 @@ export const getApiCredits = async ({ userId }: ApiCreditsRequest) => {
     totalCredits: userApiLimit.totalCredits,
   }
 }
+
+export const initNewApiUser = async ({ userId }: ApiLimitRequest) => {
+  const res = await prismadb.userApiLimit.create({
+    data: {
+      userId,
+      totalCredits: INITIAL_FREE_CREDITS,
+      usedCredits: 0,
+    },
+  })
+
+  return res
+}

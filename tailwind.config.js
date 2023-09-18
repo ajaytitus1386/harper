@@ -73,6 +73,13 @@ module.exports = {
           illustrator: "#8D5A97",
           impression: "#A64253",
           settings: "#D8E2DC",
+
+          bg: {
+            conversation: "#34D587",
+            composer: "#00B4CC",
+            illustrator: "#A273AB",
+            impression: "#BF5F6F",
+          },
         },
       },
       borderRadius: {
