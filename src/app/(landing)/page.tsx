@@ -11,6 +11,7 @@ import React, { Children, cloneElement, useEffect, useState } from "react"
 const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { isSignedIn, isLoaded } = useUser()
   const [isFocused, setIsFocused] = useState(false)
   const [selectedChild, setSelectedChild] = useState<React.ReactElement | null>(
     null
@@ -109,6 +110,7 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
             // Since we use the top left attributes, we need to adjust the coordinates to start relative to the center of the circle
             style={{
               position: "absolute",
+              zIndex: index % 2 === 0 ? "99" : "0",
               // 50% of parent size is used
               top:
                 selectedChild === child
@@ -139,10 +141,34 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
       })}
 
       <div
-        className="absolute w-full top-1/2 left-1/2 animate-counter-rotate origin-top-left"
+        className="absolute z-10 w-full top-1/2 left-1/2 animate-counter-rotate origin-top-left"
         style={{ animationPlayState: isFocused ? "paused" : "running" }}
       >
-        {selectedChild && (
+        {/* top-[80%] lg:top-full */}
+        <div className="relative -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-y-4 py-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-white font-bold text-center">
+            Get Started Now.
+            <br />
+            <u className="underline underline-offset-4">For Free.</u>
+          </h2>
+          <sub className="text-sm font-light text-white">
+            No credit card required
+          </sub>
+          {isLoaded && isSignedIn ? (
+            <Link href="/dashboard">
+              <Button className="px-4 py-2 rounded-md bg-white text-landing-to">
+                Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <SignUpButton mode="modal">
+              <Button className="px-4 py-2 rounded-md bg-white text-landing-to">
+                Sign Up
+              </Button>
+            </SignUpButton>
+          )}
+        </div>
+        {/* {selectedChild && (
           <div
             className={`relative -translate-x-1/2 -translate-y-1/2 px-4 py-2 rounded-md`}
           >
@@ -161,7 +187,7 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
               </>
             )}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   )
@@ -189,7 +215,6 @@ const ToolSphere = ({
 }
 
 const LandingPage = () => {
-  const { isSignedIn, isLoaded } = useUser()
   return (
     <div className="flex flex-col relative items-center justify-center h-full w-full mt-8">
       <h1 className="absolute w-full md:w-1/2 top-16 text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl leading-normal font-bold text-transparent text-center bg-clip-text bg-gradient-to-r from-landing-from to-landing-to">
@@ -200,31 +225,6 @@ const LandingPage = () => {
           <ToolSphere key={tool.href} {...tool} />
         ))}
       </RotatingCarousel>
-
-      {/* top-[80%] lg:top-full */}
-      <div className="absolute flex flex-col items-center justify-center gap-y-4 py-4 px-8 lg:px-16">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl text-white font-bold text-center">
-          Get Started Now.
-          <br />
-          <u className="underline underline-offset-4">For Free.</u>
-        </h2>
-        <sub className="text-sm font-light text-white">
-          No credit card required
-        </sub>
-        {isLoaded && isSignedIn ? (
-          <Link href="/dashboard">
-            <Button className="px-4 py-2 rounded-md bg-white text-landing-to">
-              Dashboard
-            </Button>
-          </Link>
-        ) : (
-          <SignUpButton mode="modal">
-            <Button className="px-4 py-2 rounded-md bg-white text-landing-to">
-              Sign Up
-            </Button>
-          </SignUpButton>
-        )}
-      </div>
     </div>
   )
 }
