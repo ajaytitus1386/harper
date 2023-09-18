@@ -40,8 +40,8 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main
       className={cn(
-        "relative h-full max-w-full bg-gradient-to-b from-landing-from to-landing-to",
-        isSplash ? "overflow-hidden" : "overflow-y-auto overflow-x-hidden"
+        "relative h-full w-full bg-gradient-to-b from-landing-from to-landing-to bg-cover bg-center bg-no-repeat overflow-x-hidden",
+        isSplash ? "overflow-y-hidden" : "overflow-y-auto "
       )}
     >
       <PropogateLoader
@@ -53,10 +53,11 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
         className="absolute top-1/2 left-1/2 -translate-y-1/2"
       />
 
+      {/* Curved Divider */}
       <div
         className={cn(
           [
-            "absolute top-0 left-0 w-full overflow-hidden",
+            "absolute top-0 lg:-top-[33%] left-0 w-full overflow-hidden",
             animatedDividerClassName,
           ].join(" ")
         )}
