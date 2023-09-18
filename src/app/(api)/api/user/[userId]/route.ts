@@ -1,3 +1,4 @@
+import { initNewApiUser } from "@/lib/api-limits"
 import prismadb from "@/lib/prismadb"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -13,7 +14,10 @@ export async function GET(
   })
 
   if (!userApiLimit) {
-    return new NextResponse("User not found", { status: 404 })
+    const newUserApiLimit = await initNewApiUser({
+      userId: context.params.userId,
+    })
+    return new NextResponse(JSON.stringify(newUserApiLimit))
   }
 
   return new NextResponse(JSON.stringify(userApiLimit))
