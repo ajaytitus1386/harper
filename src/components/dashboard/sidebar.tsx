@@ -39,7 +39,17 @@ export const routes: HarperRoute[] = toolsContent.map((tool) => ({
   Icon: tool.Icon,
 }))
 
-const SidebarLink = ({ href, label, color, Icon }: HarperRoute) => {
+type SidebarLinkProps = HarperRoute & {
+  setIsSidebarOpen?: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const SidebarLink = ({
+  href,
+  label,
+  color,
+  Icon,
+  setIsSidebarOpen,
+}: SidebarLinkProps) => {
   const pathname = usePathname()
   return (
     <Link
@@ -49,6 +59,7 @@ const SidebarLink = ({ href, label, color, Icon }: HarperRoute) => {
         "flex items-center justify-start rounded-lg gap-x-2 hover:bg-primary-100 px-2 py-2",
         pathname === href && "bg-primary-100"
       )}
+      onClick={() => setIsSidebarOpen && setIsSidebarOpen(false)}
     >
       {Icon(color, "text-xl w-8")}
       <h2 className="text-white text-lg">{label}</h2>
@@ -58,6 +69,7 @@ const SidebarLink = ({ href, label, color, Icon }: HarperRoute) => {
 
 const Sidebar: React.FC<Props> = ({
   isSidebarOpen,
+  setIsSidebarOpen,
   detectSlideStart,
   detectSlideEnd,
 }) => {
@@ -81,11 +93,16 @@ const Sidebar: React.FC<Props> = ({
               className={`${color} text-xl w-8`}
             />
           )}
+          setIsSidebarOpen={setIsSidebarOpen}
         />
         <Separator className="px-2 bg-gray-600" />
         <h1 className="text-gray-400 ml-2 font-light text-sm">Tools</h1>
         {routes.map((route) => (
-          <SidebarLink key={route.href} {...route} />
+          <SidebarLink
+            key={route.href}
+            {...route}
+            setIsSidebarOpen={setIsSidebarOpen}
+          />
         ))}
         <Separator className="px-2 bg-gray-600" />
         <SidebarLink
@@ -95,6 +112,7 @@ const Sidebar: React.FC<Props> = ({
           Icon={(color: string) => (
             <FontAwesomeIcon icon={faGear} className={`${color} text-xl w-8`} />
           )}
+          setIsSidebarOpen={setIsSidebarOpen}
         />
       </div>
       <div className="flex flex-col px-2 gap-y-2">
