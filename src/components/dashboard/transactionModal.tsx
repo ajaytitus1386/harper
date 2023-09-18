@@ -12,6 +12,7 @@ import {
 import { useTransactionModal } from "@/hooks/useTransactionModal"
 import { Card, CardDescription, CardHeader } from "../ui/card"
 import { Button } from "../ui/button"
+import ComingSoon from "./comingSoon"
 
 type TransactionProps = {
   credits: number
@@ -54,7 +55,8 @@ const TransactionModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent>
-        <DialogHeader>
+        <ComingSoon />
+        {/* <DialogHeader>
           <DialogTitle>Purchase More Credits</DialogTitle>
           <DialogDescription>
             Top-up on credits to keep using Harper!
@@ -65,7 +67,7 @@ const TransactionModal = () => {
         ))}
         <DialogFooter>
           <Button>Purchase</Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   )
