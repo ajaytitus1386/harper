@@ -16,6 +16,7 @@ import {
   faImage,
   faComments,
   faIdCardClip,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons"
 
 import { faCopy } from "@fortawesome/free-regular-svg-icons"
@@ -44,7 +45,8 @@ library.add(
   faCopy,
   faMusic,
   faImage,
-  faIdCardClip
+  faIdCardClip,
+  faStar
 )
 
 export default function RootLayout({

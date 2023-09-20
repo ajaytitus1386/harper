@@ -1,12 +1,13 @@
 "use client"
 
-import { HarperRoute } from "@/components/dashboard/sidebar"
 import { Card } from "@/components/ui/card"
+import { toast } from "@/components/ui/use-toast"
 import { HarperTool, toolsContent } from "@/content/tools"
 import { faArrowRight, faComments } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
-import React, { useState } from "react"
+import { useSearchParams } from "next/navigation"
+import React, { useEffect, useState } from "react"
 
 const tools: HarperTool[] = toolsContent
 
@@ -49,6 +50,25 @@ const ToolCard = ({ tool }: { tool: HarperTool }) => {
 }
 
 const DashboardPage = () => {
+  const searchParams = useSearchParams()
+
+  const isOrderSuccess = searchParams.get("success")
+  const isOrderCancelled = searchParams.get("canceled")
+
+  useEffect(() => {
+    if (isOrderSuccess) {
+      toast({
+        title: "Order Success!",
+        description: "Thank you for supoorting Harper.",
+      })
+    } else if (isOrderCancelled) {
+      toast({
+        title: "Order Canceled",
+        description: "Your purchase was canceled before complete.",
+      })
+    }
+  }, [isOrderCancelled, isOrderSuccess])
+
   return (
     <div className="flex flex-col items-center justify-start w-full my-6">
       <h1 className="text-xl md:text-3xl font-bold text-center">
