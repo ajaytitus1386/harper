@@ -20,3 +20,14 @@ model UserApiLimit {
   updatedAt DateTime @updatedAt
   
 }
+
+model UserTransaction {
+  id String @id @default(cuid())
+  userId String
+  stripeCustomerId String? @map("stripe_customer_id")
+  stripeTransactionId String? @map("stripe_transaction_id")
+  stripePriceId String? @map("stripe_price_id")
+  credits Int @default(0)
+  quantity Int @default(1)
+  createdAt DateTime @default(now())
+}
