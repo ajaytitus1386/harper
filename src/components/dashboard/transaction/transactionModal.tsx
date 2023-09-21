@@ -29,6 +29,8 @@ import { Input } from "@/components/ui/input"
 import { TransactionFormBody } from "@/app/(api)/api/stripe/route"
 import { submitTransactionForm } from "@/services/transaction"
 import { useRouter } from "next/navigation"
+import { toast } from "@/components/ui/use-toast"
+import { useUser } from "@clerk/nextjs"
 
 type TransactionProps = {
   name: string
@@ -108,6 +110,7 @@ const TransactionOption = ({
 const TransactionModal = () => {
   const { isOpen, closeModal } = useTransactionModal()
   const { push } = useRouter()
+  const { user } = useUser()
 
   const defaultValues = {
     priceId: "price_1NrxVwSCc7vncoJQ9USQdKHv",
@@ -119,7 +122,7 @@ const TransactionModal = () => {
     defaultValues: defaultValues,
   })
 
-  const creditOptionSelected = transactionOptions.find(
+  const creditOptionSelected: number | undefined = transactionOptions.find(
     (txn) => txn.priceId === form.getValues("priceId")
   )?.credits
 
@@ -128,17 +131,41 @@ const TransactionModal = () => {
     : null
 
   const onSubmit = async (values: z.infer<typeof transactionFormSchema>) => {
+    if (!user?.id) {
+      toast({
+        title: "User Authentication Error",
+        description: "Please try again",
+      })
+      return
+    }
+
+    if (!totalCredits) {
+      toast({
+        title: "Invalid Option",
+        description: "Please select a valid credit option.",
+      })
+      return
+    }
+
     const body: TransactionFormBody = {
       priceId: values.priceId,
       quantity: values.quantity,
+      userId: user?.id,
+      credits: totalCredits,
     }
 
-    const response = await submitTransactionForm(body)
-    console.log("Form submitted", response)
+    try {
+      const response = await submitTransactionForm(body)
+      if (!response?.data?.url) return console.log("No url found")
 
-    if (!response?.data?.url) return console.log("No url found")
-
-    push(response?.data?.url)
+      push(response?.data?.url)
+    } catch (error) {
+      toast({
+        title: "Transaction Failed",
+        description:
+          "Sorry, couldn't complete your transaction. Try again later.",
+      })
+    }
   }
 
   return (

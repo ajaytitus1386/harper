@@ -2,9 +2,18 @@ import { stripe } from "@/lib/stripe"
 import { absoluteUrl } from "@/lib/utils"
 import { NextRequest, NextResponse } from "next/server"
 
+export type CheckoutMetadata = {
+  priceId: string
+  quantity: number
+  userId: string
+  credits: number
+}
+
 export type TransactionFormBody = {
   priceId: string
   quantity: number
+  userId: string
+  credits: number
 }
 
 export async function POST(req: NextRequest) {
@@ -15,9 +24,10 @@ export async function POST(req: NextRequest) {
     return new NextResponse("No body provided", { status: 400 })
   }
 
-  const { priceId, quantity }: TransactionFormBody = await req.json()
+  const { priceId, quantity, userId, credits }: TransactionFormBody =
+    await req.json()
 
-  console.log("Received transaction form body: ", priceId, quantity)
+  console.log("Received transaction form body: ", priceId, quantity, userId)
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -31,6 +41,12 @@ export async function POST(req: NextRequest) {
       mode: "payment",
       success_url: absoluteUrl("/dashboard?success=true"),
       cancel_url: absoluteUrl("/dashboard?canceled=true"),
+      metadata: {
+        userId,
+        credits,
+        priceId,
+        quantity,
+      },
     })
 
     if (!session.url)
