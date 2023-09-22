@@ -4,6 +4,7 @@ import { stripe } from "@/lib/stripe"
 import { NextRequest, NextResponse } from "next/server"
 import { CheckoutMetadata } from "../stripe/route"
 import { addTransactionToDb } from "@/lib/api-transaction"
+import { addToApiTotalCredits } from "@/lib/api-limits"
 
 export async function POST(req: NextRequest) {
   const endpointSecret = process.env.STRIPE_API_WEBHOOK_KEY as string
@@ -37,6 +38,12 @@ export async function POST(req: NextRequest) {
         quantity: Number(metadata.quantity),
         createdAt: new Date(session.created),
       })
+
+      await addToApiTotalCredits({
+        userId: metadata.userId,
+        credits: Number(metadata.credits) * Number(metadata.quantity),
+      })
+
       break
 
     default:

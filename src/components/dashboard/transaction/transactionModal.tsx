@@ -139,7 +139,7 @@ const TransactionModal = () => {
       return
     }
 
-    if (!totalCredits) {
+    if (!creditOptionSelected) {
       toast({
         title: "Invalid Option",
         description: "Please select a valid credit option.",
@@ -151,7 +151,7 @@ const TransactionModal = () => {
       priceId: values.priceId,
       quantity: values.quantity,
       userId: user?.id,
-      credits: totalCredits,
+      credits: creditOptionSelected,
     }
 
     try {
