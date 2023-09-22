@@ -2,7 +2,6 @@
 
 import React from "react"
 import { Card, CardContent, CardFooter } from "../ui/card"
-import { Progress } from "../ui/progress"
 import { Button } from "../ui/button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCoins } from "@fortawesome/free-solid-svg-icons"
