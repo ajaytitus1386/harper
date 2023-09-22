@@ -27,8 +27,6 @@ export async function POST(req: NextRequest) {
   const { priceId, quantity, userId, credits }: TransactionFormBody =
     await req.json()
 
-  console.log("Received transaction form body: ", priceId, quantity, userId)
-
   try {
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -56,7 +54,6 @@ export async function POST(req: NextRequest) {
       status: 200,
     })
   } catch (error) {
-    console.log(error)
     return new NextResponse("Error making checkout session", { status: 500 })
   }
 }

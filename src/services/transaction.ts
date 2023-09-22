@@ -6,7 +6,6 @@ export const submitTransactionForm = async (body: TransactionFormBody) => {
     const res = await axios.post("/api/stripe", body)
     return res
   } catch (error) {
-    console.log(error)
-    // throw new Error("Error submitting transaction form: " + error)
+    throw new Error("Error submitting transaction form: " + error)
   }
 }

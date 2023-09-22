@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session
-  console.log(session)
 
   switch (event.type) {
     case "checkout.session.completed":

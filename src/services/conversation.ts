@@ -15,7 +15,6 @@ export const getConversationCompletion = async (prompt: string) => {
   )
 
   let prediction: PredictionRequest = response.data
-  console.log("The prediction request is: ", prediction)
 
   return prediction
 }

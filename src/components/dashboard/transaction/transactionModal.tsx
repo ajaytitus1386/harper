@@ -156,7 +156,10 @@ const TransactionModal = () => {
 
     try {
       const response = await submitTransactionForm(body)
-      if (!response?.data?.url) return console.log("No url found")
+      if (!response?.data?.url) {
+        console.log("No url found")
+        throw Error("URL not found")
+      }
 
       push(response?.data?.url)
     } catch (error) {
