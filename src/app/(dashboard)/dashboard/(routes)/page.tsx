@@ -1,9 +1,10 @@
 "use client"
 
+import GetStarted from "@/components/dashboard/getStarted"
 import { Card } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
 import { HarperTool, toolsContent } from "@/content/tools"
-import { faArrowRight, faComments } from "@fortawesome/free-solid-svg-icons"
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
@@ -59,7 +60,7 @@ const DashboardPage = () => {
     if (isOrderSuccess) {
       toast({
         title: "Order Success!",
-        description: "Thank you for supoorting Harper.",
+        description: "Thank you for supporting Harper.",
       })
     } else if (isOrderCancelled) {
       toast({
@@ -67,10 +68,11 @@ const DashboardPage = () => {
         description: "Your purchase was canceled before complete.",
       })
     }
-  }, [isOrderCancelled, isOrderSuccess])
+  }, [isOrderCancelled, isOrderSuccess, searchParams])
 
   return (
     <div className="flex flex-col items-center justify-start w-full my-6">
+      <GetStarted />
       <h1 className="text-xl md:text-3xl font-bold text-center">
         What will you compose today?
       </h1>
