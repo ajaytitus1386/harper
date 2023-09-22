@@ -11,6 +11,7 @@ interface useUserCreditsStore {
     totalCredits: number
   }
   isFreeTier: boolean
+  isCreditsLoaded: boolean
   fetchUserCredits: (userId: string) => Promise<void>
 }
 
@@ -20,6 +21,7 @@ const useUserCredits = create<useUserCreditsStore>((set) => ({
     totalCredits: 0,
   },
   isFreeTier: true,
+  isCreditsLoaded: false,
   fetchUserCredits: async (userId) => {
     if (!userId) return
 
@@ -32,6 +34,7 @@ const useUserCredits = create<useUserCreditsStore>((set) => ({
         usedCredits: res.data.usedCredits,
         totalCredits: res.data.totalCredits,
       },
+      isCreditsLoaded: true,
       isFreeTier: res.data.totalCredits <= INITIAL_FREE_CREDITS,
     })
   },
