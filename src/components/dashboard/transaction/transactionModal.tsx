@@ -44,7 +44,7 @@ type TransactionProps = {
 export const transactionOptions: TransactionProps[] = [
   {
     name: "Basic",
-    priceId: "basic",
+    priceId: "price_1Nt52gSCc7vncoJQ2crtH9Vx",
     credits: 10,
     price: 10,
     unit: "INR",
@@ -60,7 +60,7 @@ export const transactionOptions: TransactionProps[] = [
   },
   {
     name: "Premium",
-    priceId: "premium",
+    priceId: "price_1Nt53ASCc7vncoJQr8O6yhOD",
     credits: 100,
     price: 100,
     unit: "INR",
