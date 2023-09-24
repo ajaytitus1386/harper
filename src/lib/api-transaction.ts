@@ -9,6 +9,8 @@ export const addTransactionToDb = async ({
   stripeTransactionId,
   credits,
   quantity,
+  amountPaid,
+  currency,
   createdAt,
 }: UserTransaction) => {
   const userTransaction = await prismadb.userTransaction.findUnique({
@@ -18,8 +20,8 @@ export const addTransactionToDb = async ({
   })
 
   if (userTransaction) {
-    console.log("Tried adding transaction that already exists")
-    return
+    // console.log("Tried adding transaction that already exists")
+    throw new Error("Tried adding transaction that already exists")
   }
 
   await prismadb.userTransaction.create({
@@ -31,7 +33,19 @@ export const addTransactionToDb = async ({
       stripePriceId,
       credits,
       quantity,
+      amountPaid,
+      currency,
       createdAt,
     },
   })
+}
+
+export const fetchTransactions = async ({ userId }: { userId: string }) => {
+  const transactions = await prismadb.userTransaction.findMany({
+    where: {
+      userId,
+    },
+  })
+
+  return transactions
 }

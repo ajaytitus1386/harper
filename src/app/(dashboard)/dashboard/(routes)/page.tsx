@@ -77,7 +77,7 @@ const DashboardPage = () => {
         What will you compose today?
       </h1>
       <p className="text-muted-foreground font-light text-sm md:text-base text-center">
-        Explore your suite of applications
+        Try out some of these tools
       </p>
       <div className="w-full my-6 grid grid-cols-[repeat(auto-fit,_minmax(192px,1fr))] gap-4 md:gap-8 justify-items-center items-center">
         {tools.map((tool) => (

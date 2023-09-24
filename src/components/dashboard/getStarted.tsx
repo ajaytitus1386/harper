@@ -1,4 +1,6 @@
-import React from "react"
+"use client"
+
+import React, { useEffect, useState } from "react"
 import {
   Card,
   CardContent,
@@ -17,10 +19,39 @@ import Link from "next/link"
 import { INITIAL_FREE_CREDITS } from "@/lib/api-constants"
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
+import { cn } from "@/lib/utils"
+import { useUser } from "@clerk/nextjs"
+import axios from "axios"
+import { UserApiLimit } from "@prisma/client"
 
 const GetStarted = () => {
-  return (
-    <Card className="w-full my-4">
+  const [isOpen, setIsOpen] = useState(false)
+  const [doNotShowAgain, setDoNotShowAgain] = useState(false)
+
+  const { user } = useUser()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user?.id) return
+
+      const res = await axios.get(`/api/user/${user.id}`)
+      const data: UserApiLimit = res.data
+
+      if (data.isNewUser) {
+        setIsOpen(true)
+      }
+    }
+    fetchData()
+  }, [user?.id])
+
+  const onClose = async () => {
+    setIsOpen(false)
+    // Prevent the modal from showing again
+    if (doNotShowAgain) await axios.post(`/api/user/permanent`)
+  }
+
+  return isOpen ? (
+    <Card className={cn("w-full my-4")}>
       <CardHeader>
         <CardTitle className="text-lg sm:text-xl md:text-2xl">
           Welcome to Harper!
@@ -66,9 +97,13 @@ const GetStarted = () => {
         </ul>
       </CardContent>
       <CardFooter className="w-full flex items-center justify-between">
-        <Button variant={"outline"}>Close</Button>
+        <Button variant={"outline"} onClick={onClose}>
+          Close
+        </Button>
         <div className="flex items-center justify-center gap-x-1">
           <Checkbox
+            checked={doNotShowAgain}
+            onCheckedChange={() => setDoNotShowAgain(!doNotShowAgain)}
             className="border-muted-foreground"
             id="do-not-show-again-get-started"
           />
@@ -78,7 +113,7 @@ const GetStarted = () => {
         </div>
       </CardFooter>
     </Card>
-  )
+  ) : null
 }
 
 export default GetStarted

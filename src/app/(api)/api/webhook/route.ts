@@ -35,7 +35,9 @@ export async function POST(req: NextRequest) {
         stripeTransactionId: session.payment_intent as string,
         credits: Number(metadata.credits),
         quantity: Number(metadata.quantity),
-        createdAt: new Date(session.created),
+        amountPaid: Number(session.amount_total) / 100, // Divide by hundred to conver to unit currency (ex: cents to dollars)
+        currency: session.currency || "inr",
+        createdAt: new Date(session.created * 1000),
       })
 
       await addToApiTotalCredits({
