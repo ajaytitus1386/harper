@@ -1,12 +1,14 @@
 "use client"
 
-import { HarperRoute } from "@/components/dashboard/sidebar"
+import GetStarted from "@/components/dashboard/getStarted"
 import { Card } from "@/components/ui/card"
+import { toast } from "@/components/ui/use-toast"
 import { HarperTool, toolsContent } from "@/content/tools"
-import { faArrowRight, faComments } from "@fortawesome/free-solid-svg-icons"
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Link from "next/link"
-import React, { useState } from "react"
+import { useSearchParams } from "next/navigation"
+import React, { useEffect, useState } from "react"
 
 const tools: HarperTool[] = toolsContent
 
@@ -49,13 +51,33 @@ const ToolCard = ({ tool }: { tool: HarperTool }) => {
 }
 
 const DashboardPage = () => {
+  const searchParams = useSearchParams()
+
+  const isOrderSuccess = searchParams.get("success")
+  const isOrderCancelled = searchParams.get("canceled")
+
+  useEffect(() => {
+    if (isOrderSuccess) {
+      toast({
+        title: "Order Success!",
+        description: "Thank you for supporting Harper.",
+      })
+    } else if (isOrderCancelled) {
+      toast({
+        title: "Order Canceled",
+        description: "Your purchase was canceled before complete.",
+      })
+    }
+  }, [isOrderCancelled, isOrderSuccess, searchParams])
+
   return (
     <div className="flex flex-col items-center justify-start w-full my-6">
+      <GetStarted />
       <h1 className="text-xl md:text-3xl font-bold text-center">
         What will you compose today?
       </h1>
       <p className="text-muted-foreground font-light text-sm md:text-base text-center">
-        Explore your suite of applications
+        Try out some of these tools
       </p>
       <div className="w-full my-6 grid grid-cols-[repeat(auto-fit,_minmax(192px,1fr))] gap-4 md:gap-8 justify-items-center items-center">
         {tools.map((tool) => (

@@ -15,7 +15,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Separator } from "../ui/separator"
-import CreditCounter from "./creditCounter"
+import CreditDisplay from "./creditDisplay"
 import { toolsContent } from "@/content/tools"
 
 interface Props {
@@ -116,7 +116,7 @@ const Sidebar: React.FC<Props> = ({
         />
       </div>
       <div className="flex flex-col px-2 gap-y-2">
-        <CreditCounter />
+        <CreditDisplay />
         {/* <p className="text-white text-center w-full">
           Made with Passion &#10084;
         </p> */}

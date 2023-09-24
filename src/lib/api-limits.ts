@@ -99,3 +99,14 @@ export const initNewApiUser = async ({ userId }: ApiLimitRequest) => {
 
   return res
 }
+
+export const makePermanentApiUser = async ({ userId }: ApiLimitRequest) => {
+  const res = await prismadb.userApiLimit.update({
+    where: { userId },
+    data: {
+      isNewUser: false,
+    },
+  })
+
+  return res
+}

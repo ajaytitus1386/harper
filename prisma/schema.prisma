@@ -18,5 +18,18 @@ model UserApiLimit {
   totalCredits Int @default(50)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+  isNewUser Boolean @default(true)
+}
+
+model UserTransaction {
+  id String @id @default(cuid())
+  userId String
+  stripeCustomerId String? @map("stripe_customer_id")
+  stripeTransactionId String? @map("stripe_transaction_id")
+  stripePriceId String? @map("stripe_price_id")
+  credits Int @default(0)
+  quantity Int @default(1)
+  amountPaid Float 
+  currency String 
+  createdAt DateTime @default(now())
 }
