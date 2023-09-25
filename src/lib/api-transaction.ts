@@ -49,3 +49,11 @@ export const fetchTransactions = async ({ userId }: { userId: string }) => {
 
   return transactions
 }
+
+export const deleteAllTransactions = async ({ userId }: { userId: string }) => {
+  await prismadb.userTransaction.deleteMany({
+    where: {
+      userId,
+    },
+  })
+}
