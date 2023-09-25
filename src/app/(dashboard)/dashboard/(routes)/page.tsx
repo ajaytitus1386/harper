@@ -73,7 +73,7 @@ const DashboardPage = () => {
     } else if (isOrderCancelled) {
       toast({
         title: "Order Canceled",
-        description: "Your purchase was canceled before complete.",
+        description: "Your purchase was canceled before completion.",
         variant: "destructive",
       })
     }
