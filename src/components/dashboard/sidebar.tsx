@@ -17,6 +17,10 @@ import { cn } from "@/lib/utils"
 import { Separator } from "../ui/separator"
 import CreditDisplay from "./creditDisplay"
 import { toolsContent } from "@/content/tools"
+import { Card, CardContent, CardFooter } from "../ui/card"
+import { Button } from "../ui/button"
+import { useTransactionModal } from "@/hooks/useTransactionModal"
+import useUserCredits from "@/hooks/useUserCredits"
 
 interface Props {
   isSidebarOpen: boolean
@@ -73,6 +77,9 @@ const Sidebar: React.FC<Props> = ({
   detectSlideStart,
   detectSlideEnd,
 }) => {
+  const { isFreeTier } = useUserCredits()
+  const { openModal } = useTransactionModal()
+
   return (
     <div
       className={[
@@ -116,7 +123,19 @@ const Sidebar: React.FC<Props> = ({
         />
       </div>
       <div className="flex flex-col px-2 gap-y-2">
-        <CreditDisplay />
+        <Card className="flex flex-col space-y-2 bg-primary-100 px-4 py-2 rounded-md border-0">
+          <CardContent className="flex flex-row justify-between items-center p-0">
+            <CreditDisplay />
+          </CardContent>
+          <CardFooter className="p-0">
+            <Button
+              onClick={openModal}
+              className="w-full text-white font-bold px-2 py-1 bg-gradient-to-r from-upgrade-from to-upgrade-to bg-[length:200%_200%] bg-center hover:bg-right transition-all duration-300"
+            >
+              {isFreeTier ? "Upgrade" : "Add"}
+            </Button>
+          </CardFooter>
+        </Card>
         {/* <p className="text-white text-center w-full">
           Made with Passion &#10084;
         </p> */}
