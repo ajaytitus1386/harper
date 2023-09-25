@@ -60,6 +60,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className="h-full">
+        <head>
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+        </head>
         <body className={[poppins.className, "h-full"].join(" ")}>
           <AppProvider>
             <ModalProvider />
