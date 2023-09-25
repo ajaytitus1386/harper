@@ -74,14 +74,15 @@ const BotMessage = ({ message }: { message: string }) => {
       </div>
       <div className="px-4 py-2 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
         {/* //TODO: Parse markdown as well as Typewriter with <ReactMarkdown /> */}
-        <Typewriter
+        <ReactMarkdown>{message}</ReactMarkdown>
+        {/* <Typewriter
           options={{
             strings: message,
             autoStart: true,
             cursor: "",
             delay: 75,
           }}
-        />
+        /> */}
       </div>
     </div>
   )
