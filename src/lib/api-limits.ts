@@ -1,5 +1,5 @@
 import prismadb from "./prismadb"
-import { INITIAL_FREE_CREDITS, MAX_FREE_COUNTS } from "./api-constants"
+import { INITIAL_FREE_CREDITS } from "./api-constants"
 
 type ApiLimitRequest = {
   userId: string
@@ -22,10 +22,10 @@ export const addToApiTotalCredits = async ({
   })
 
   if (!userApiLimit) {
-    await prismadb.userApiLimit.create({
+    await initNewApiUser({ userId })
+    await prismadb.userApiLimit.update({
+      where: { userId },
       data: {
-        userId,
-        usedCredits: 0,
         totalCredits: INITIAL_FREE_CREDITS + credits,
       },
     })
@@ -48,11 +48,11 @@ export const addToApiUsedCredits = async ({
   })
 
   if (!userApiLimit) {
-    await prismadb.userApiLimit.create({
+    await initNewApiUser({ userId })
+    await prismadb.userApiLimit.update({
+      where: { userId },
       data: {
-        userId,
         usedCredits: credits,
-        totalCredits: INITIAL_FREE_CREDITS,
       },
     })
   } else {
@@ -71,13 +71,7 @@ export const getApiCredits = async ({ userId }: ApiCreditsRequest) => {
   })
 
   if (!userApiLimit) {
-    await prismadb.userApiLimit.create({
-      data: {
-        userId,
-        totalCredits: INITIAL_FREE_CREDITS,
-        usedCredits: 0,
-      },
-    })
+    await initNewApiUser({ userId })
 
     return { usedCredits: 0, totalCredits: INITIAL_FREE_CREDITS }
   }

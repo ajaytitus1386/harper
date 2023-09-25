@@ -37,6 +37,7 @@ import ReactMarkdown from "react-markdown"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import PulseLoader from "react-spinners/PulseLoader"
+import Typewriter from "typewriter-effect"
 
 import { conversationModes, converstaionFormSchema } from "./constant"
 import {
@@ -72,7 +73,15 @@ const BotMessage = ({ message }: { message: string }) => {
         </Button>
       </div>
       <div className="px-4 py-2 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
-        <ReactMarkdown>{message}</ReactMarkdown>
+        {/* //TODO: Parse markdown as well as Typewriter with <ReactMarkdown /> */}
+        <Typewriter
+          options={{
+            strings: message,
+            autoStart: true,
+            cursor: "",
+            delay: 75,
+          }}
+        />
       </div>
     </div>
   )

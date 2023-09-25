@@ -2,7 +2,7 @@
 
 import GetStarted from "@/components/dashboard/getStarted"
 import { Card } from "@/components/ui/card"
-import { toast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast"
 import { HarperTool, toolsContent } from "@/content/tools"
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -53,10 +53,18 @@ const ToolCard = ({ tool }: { tool: HarperTool }) => {
 const DashboardPage = () => {
   const searchParams = useSearchParams()
 
+  const [hasSearchParam, setHasSearchParam] = useState(false)
+
   const isOrderSuccess = searchParams.get("success")
   const isOrderCancelled = searchParams.get("canceled")
 
+  const { toast } = useToast()
+
   useEffect(() => {
+    if (isOrderSuccess || isOrderCancelled) {
+      setHasSearchParam(true)
+    }
+
     if (isOrderSuccess) {
       toast({
         title: "Order Success!",
@@ -65,10 +73,11 @@ const DashboardPage = () => {
     } else if (isOrderCancelled) {
       toast({
         title: "Order Canceled",
-        description: "Your purchase was canceled before complete.",
+        description: "Your purchase was canceled before completion.",
+        variant: "destructive",
       })
     }
-  }, [isOrderCancelled, isOrderSuccess, searchParams])
+  }, [isOrderCancelled, isOrderSuccess, toast, hasSearchParam])
 
   return (
     <div className="flex flex-col items-center justify-start w-full my-6">
