@@ -8,11 +8,14 @@ export const converstaionFormSchema = z.object({
 })
 
 export type ConversationMode = {
-  name: string
+  name: ConversationModesEnum
   label: string
   systemPrompt: string
   suggestions: string[]
 }
+
+export type ConversationModesEnum = "all" | "creative" | "technical" | "custom"
+
 export const conversationModes: ConversationMode[] = [
   {
     name: "all",

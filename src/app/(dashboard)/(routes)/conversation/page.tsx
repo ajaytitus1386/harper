@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -37,9 +37,12 @@ import ReactMarkdown from "react-markdown"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import PulseLoader from "react-spinners/PulseLoader"
-import Typewriter from "typewriter-effect"
 
-import { conversationModes, converstaionFormSchema } from "./constant"
+import {
+  ConversationModesEnum,
+  conversationModes,
+  converstaionFormSchema,
+} from "./constant"
 import {
   getConversationCompletion,
   pollConversationCompletion,
@@ -49,6 +52,8 @@ import { useRouter } from "next/navigation"
 import { useTransactionModal } from "@/hooks/useTransactionModal"
 import { useUser } from "@clerk/nextjs"
 import useUserCredits from "@/hooks/useUserCredits"
+import CustomTypewriter from "@/components/dashboard/customTypewriter"
+import { useConversation } from "@/hooks/useConversation"
 
 const BotMessage = ({ message }: { message: string }) => {
   const { toast } = useToast()
@@ -63,7 +68,7 @@ const BotMessage = ({ message }: { message: string }) => {
   }
 
   return (
-    <div className="flex w-full justify-end sm:w-1/2 md:w-[400px] px-4 py-2 space-x-2 ml-auto">
+    <div className="flex w-full justify-end sm:w-1/2 md:w-[400px] lg:w-full px-4 py-2 space-x-2 ml-auto">
       <div className="flex flex-col">
         <Button onClick={copyToClipboard}>
           <FontAwesomeIcon
@@ -74,15 +79,9 @@ const BotMessage = ({ message }: { message: string }) => {
       </div>
       <div className="px-4 py-2 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
         {/* //TODO: Parse markdown as well as Typewriter with <ReactMarkdown /> */}
-        <ReactMarkdown>{message}</ReactMarkdown>
-        {/* <Typewriter
-          options={{
-            strings: message,
-            autoStart: true,
-            cursor: "",
-            delay: 75,
-          }}
-        /> */}
+        <ReactMarkdown>
+          {CustomTypewriter({ text: message, delay: 50 })}
+        </ReactMarkdown>
       </div>
     </div>
   )
@@ -101,7 +100,7 @@ const UserMessage = ({ message }: { message: string }) => {
   }
 
   return (
-    <div className="flex w-full justify-start sm:w-1/2 md:w-[400px] px-4 py-2 space-x-2 mr-auto">
+    <div className="flex w-full justify-start sm:w-1/2 md:w-[400px] lg:w-full px-4 py-2 space-x-2 mr-auto">
       <div className="flex flex-1 px-4 py-2 bg-gray-100 text-black rounded-r-lg rounded-tl-lg rounded-bl-sm">
         {message}
       </div>
@@ -117,7 +116,7 @@ const UserMessage = ({ message }: { message: string }) => {
   )
 }
 
-type ConversationMessage = {
+export type ConversationMessage = {
   message: string
   sender: "bot" | "user"
 }
@@ -129,12 +128,26 @@ const ConversationPage = () => {
 
   const { fetchUserCredits } = useUserCredits()
 
-  const [selectedMode, setSelectedMode] = useState("all")
-  const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
+  // const [selectedMode, setSelectedMode] = useState<ConversationModesEnum>("all")
+  // const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
+
+  const { messagesState, selectedMode, setMessagesState, setSelectedMode } =
+    useConversation()
+
   const [isCompletionProcessing, setIsCompletionProcessing] = useState(false)
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false)
 
-  const changeSelectedMode = (mode: string) => {
+  const bottomOfConversation = useRef<HTMLDivElement>(null)
+
+  // Scroll to bottom of conversation
+  useEffect(() => {
+    bottomOfConversation?.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    })
+  }, [messagesState])
+
+  const changeSelectedMode = (mode: ConversationModesEnum) => {
     setSelectedMode(mode)
   }
 
@@ -215,8 +228,10 @@ const ConversationPage = () => {
         setOutput: (predOutput) => {
           setMessagesState((prev) => {
             const prevMessages = [...prev]
+            console.log("predOutput", predOutput)
+
             prevMessages[messageIndex] = {
-              message: predOutput.output.join(""),
+              message: predOutput.output?.join(""),
               sender: "bot",
             }
             return prevMessages
@@ -226,6 +241,21 @@ const ConversationPage = () => {
     } catch (error: any) {
       if (error?.response?.status == 403) {
         openModal()
+      } else if (error?.response?.status == 402) {
+        toast({
+          title: "Platform Unaviailable",
+          description:
+            "Sorry for the inconvenience, please try again later or contact us if this persists",
+          duration: 10000,
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Error!",
+          description: "Something went wrong, please try again later",
+          duration: 10000,
+          variant: "destructive",
+        })
       }
     } finally {
       setIsCompletionProcessing(false)
@@ -336,6 +366,7 @@ const ConversationPage = () => {
                 <UserMessage key={`message_${index}`} message={message} />
               )
             )}
+            <div ref={bottomOfConversation} id="bottom-of-conversation" />
           </ScrollArea>
         ) : (
           // Suggestions

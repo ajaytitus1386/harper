@@ -76,8 +76,8 @@ const GetStarted = () => {
           </li>
           <li>
             To get started you have been given {INITIAL_FREE_CREDITS} Credits{" "}
-            <FontAwesomeIcon icon={faCoins} />, which will be deducted from
-            based on your usage.
+            <FontAwesomeIcon icon={faCoins} />, which will be deducted from your
+            account based on your usage.
           </li>
           <li>
             For more information and controls over your account, take a look at
