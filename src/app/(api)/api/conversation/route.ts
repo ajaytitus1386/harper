@@ -28,36 +28,49 @@ export async function POST(req: NextRequest) {
 
   const remainingCredits = totalCredits - usedCredits
 
-  const response = await axios.post(
-    "https://api.replicate.com/v1/predictions",
-    {
-      version:
-        "35042c9a33ac8fd5e29e27fb3197f33aa483f72c2ce3b0b9d201155c7fd2a287",
-      input: {
-        prompt,
-        // max_new_tokens: 25,
-        max_new_tokens:
-          process.env.NODE_ENV === "production"
-            ? CONVERSATION_TOKENS_PER_CREDIT * remainingCredits
-            : 25,
+  const maxTokenLimit = CONVERSATION_TOKENS_PER_CREDIT * remainingCredits
+
+  try {
+    const response = await axios.post(
+      "https://api.replicate.com/v1/predictions",
+      {
+        version:
+          "35042c9a33ac8fd5e29e27fb3197f33aa483f72c2ce3b0b9d201155c7fd2a287",
+        input: {
+          prompt:
+            `[INST] Format your response in markdown using spaces, breaks and bold text. Limit the response to a total of ${maxTokenLimit} words [/INST]` +
+            prompt,
+          // max_new_tokens: 25,
+          max_new_tokens:
+            process.env.NODE_ENV === "production" ? maxTokenLimit : 250,
+        },
       },
-    },
-    {
-      headers: {
-        Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      {
+        headers: {
+          Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    )
+
+    const prediction = response.data
+
+    return new NextResponse(JSON.stringify(prediction), { status: 201 })
+  } catch (error: any) {
+    if (error?.response?.status == 402) {
+      return new NextResponse(
+        "We're having some trouble on our end. Please try again later.",
+        { status: 402 }
+      )
     }
-  )
 
-  if (response.status !== 201) {
-    let error = response.data
+    if (error?.response?.status !== 201) {
+      let msg = error?.response?.data.detail
 
-    return new NextResponse(error.detail, { status: 500 })
+      return new NextResponse(msg, { status: 500 })
+    }
+
+    return new NextResponse(error?.data, { status: 500 })
   }
-
-  const prediction = response.data
-
-  return new NextResponse(JSON.stringify(prediction), { status: 201 })
 }

@@ -38,7 +38,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import PulseLoader from "react-spinners/PulseLoader"
 
-import { conversationModes, converstaionFormSchema } from "./constant"
+import {
+  ConversationModesEnum,
+  conversationModes,
+  converstaionFormSchema,
+} from "./constant"
 import {
   getConversationCompletion,
   pollConversationCompletion,
@@ -49,6 +53,7 @@ import { useTransactionModal } from "@/hooks/useTransactionModal"
 import { useUser } from "@clerk/nextjs"
 import useUserCredits from "@/hooks/useUserCredits"
 import CustomTypewriter from "@/components/dashboard/customTypewriter"
+import { useConversation } from "@/hooks/useConversation"
 
 const BotMessage = ({ message }: { message: string }) => {
   const { toast } = useToast()
@@ -111,7 +116,7 @@ const UserMessage = ({ message }: { message: string }) => {
   )
 }
 
-type ConversationMessage = {
+export type ConversationMessage = {
   message: string
   sender: "bot" | "user"
 }
@@ -123,8 +128,12 @@ const ConversationPage = () => {
 
   const { fetchUserCredits } = useUserCredits()
 
-  const [selectedMode, setSelectedMode] = useState("all")
-  const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
+  // const [selectedMode, setSelectedMode] = useState<ConversationModesEnum>("all")
+  // const [messagesState, setMessagesState] = useState<ConversationMessage[]>([])
+
+  const { messagesState, selectedMode, setMessagesState, setSelectedMode } =
+    useConversation()
+
   const [isCompletionProcessing, setIsCompletionProcessing] = useState(false)
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false)
 
@@ -138,7 +147,7 @@ const ConversationPage = () => {
     })
   }, [messagesState])
 
-  const changeSelectedMode = (mode: string) => {
+  const changeSelectedMode = (mode: ConversationModesEnum) => {
     setSelectedMode(mode)
   }
 
@@ -232,6 +241,21 @@ const ConversationPage = () => {
     } catch (error: any) {
       if (error?.response?.status == 403) {
         openModal()
+      } else if (error?.response?.status == 402) {
+        toast({
+          title: "Platform Unaviailable",
+          description:
+            "Sorry for the inconvenience, please try again later or contact us if this persists",
+          duration: 10000,
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Error!",
+          description: "Something went wrong, please try again later",
+          duration: 10000,
+          variant: "destructive",
+        })
       }
     } finally {
       setIsCompletionProcessing(false)
