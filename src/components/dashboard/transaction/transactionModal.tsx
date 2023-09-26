@@ -93,7 +93,7 @@ const TransactionOption = ({
               "after:content-[''] after:absolute after:top-[-2px] after:left-[-2px] after:right-[-2px] after:bottom-[-2px] after:z-[-1] after:rounded-md after:bg-gradient-to-r after:from-upgrade-from after:to-upgrade-to"
           )}
         >
-          <Card className="flex flex-col items-start rounded-md justify-center bg-white shadow-md">
+          <Card className="flex flex-col items-start rounded-md justify-center bg-white hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 w-full px-4 py-1">
               <div className="flex items-center justify-center space-x-2">
                 <h1 className="text-black text-lg font-bold">
