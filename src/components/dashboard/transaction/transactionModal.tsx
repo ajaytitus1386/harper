@@ -31,8 +31,9 @@ import { submitTransactionForm } from "@/services/transaction"
 import { useRouter } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
 import { useUser } from "@clerk/nextjs"
+import { cn } from "@/lib/utils"
 
-type TransactionProps = {
+type TransactionOptionContent = {
   name: string
   priceId: string
   credits: number
@@ -41,9 +42,13 @@ type TransactionProps = {
   isRecommended: boolean
 }
 
-export const transactionOptions: TransactionProps[] = [
+type TransactionProps = TransactionOptionContent & {
+  isSelected: boolean
+}
+
+export const transactionOptions: TransactionOptionContent[] = [
   {
-    name: "Basic",
+    name: "Basic: 250 words of Conversation responses",
     priceId: "price_1Nt52gSCc7vncoJQ2crtH9Vx",
     credits: 10,
     price: 10,
@@ -51,7 +56,7 @@ export const transactionOptions: TransactionProps[] = [
     isRecommended: false,
   },
   {
-    name: "Regular",
+    name: "Regular: 1250 words of Conversation responses",
     priceId: "price_1NrxVwSCc7vncoJQ9USQdKHv",
     credits: 50,
     price: 50,
@@ -59,7 +64,7 @@ export const transactionOptions: TransactionProps[] = [
     isRecommended: true,
   },
   {
-    name: "Premium",
+    name: "Premium: 2500 words of Conversation responses",
     priceId: "price_1Nt53ASCc7vncoJQr8O6yhOD",
     credits: 100,
     price: 100,
@@ -75,15 +80,20 @@ const TransactionOption = ({
   price,
   unit,
   isRecommended,
+  isSelected,
 }: TransactionProps) => {
   return (
     <FormItem className="w-full">
       <FormControl>
         <RadioGroupItem
           value={priceId}
-          className="w-full border-2 border-muted-foreground rounded-md"
+          className={cn(
+            "w-full border-2 border-transparent relative bg-clip-padding",
+            isSelected &&
+              "after:content-[''] after:absolute after:top-[-2px] after:left-[-2px] after:right-[-2px] after:bottom-[-2px] after:z-[-1] after:rounded-md after:bg-gradient-to-r after:from-upgrade-from after:to-upgrade-to"
+          )}
         >
-          <Card className="flex flex-col items-start justify-center">
+          <Card className="flex flex-col items-start rounded-md justify-center bg-white shadow-md">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 w-full px-4 py-1">
               <div className="flex items-center justify-center space-x-2">
                 <h1 className="text-black text-lg font-bold">
@@ -99,7 +109,7 @@ const TransactionOption = ({
                 {price} {unit}
               </div>
             </CardHeader>
-            <CardDescription className="px-4">{name}</CardDescription>
+            <CardDescription className="px-4 pb-2">{name}</CardDescription>
           </Card>
         </RadioGroupItem>
       </FormControl>
@@ -173,7 +183,7 @@ const TransactionModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent>
+      <DialogContent className="bg-gray-50">
         {/* <ComingSoon /> */}
 
         <Form {...form}>
@@ -198,7 +208,13 @@ const TransactionModal = () => {
                         className="gap-y-4 py-2"
                       >
                         {transactionOptions.map((option) => (
-                          <TransactionOption key={option.credits} {...option} />
+                          <TransactionOption
+                            key={option.credits}
+                            {...option}
+                            isSelected={
+                              form.getValues().priceId === option.priceId
+                            }
+                          />
                         ))}
                       </RadioGroup>
                     </FormControl>
