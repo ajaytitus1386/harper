@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react"
-import { loadStripe } from "@stripe/stripe-js"
 import {
   Dialog,
   DialogContent,
@@ -17,61 +16,27 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 
 import { useTransactionModal } from "@/hooks/useTransactionModal"
-import ComingSoon from "../comingSoon"
 import { useForm } from "react-hook-form"
-import { transactionFormSchema } from "./constant"
+import {
+  TransactionOptionContent,
+  transactionFormSchema,
+  transactionOptions,
+} from "./constant"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Badge } from "@/components/ui/badge"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faStar } from "@fortawesome/free-solid-svg-icons"
-import { Separator } from "@/components/ui/separator"
-import { Input } from "@/components/ui/input"
 import { TransactionFormBody } from "@/app/(api)/api/stripe/route"
 import { submitTransactionForm } from "@/services/transaction"
 import { useRouter } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
-
-type TransactionOptionContent = {
-  name: string
-  priceId: string
-  credits: number
-  price: number
-  unit: string
-  isRecommended: boolean
-}
+import { Separator } from "@/components/ui/separator"
 
 type TransactionProps = TransactionOptionContent & {
   isSelected: boolean
 }
-
-export const transactionOptions: TransactionOptionContent[] = [
-  {
-    name: "Basic: 250 words of Conversation responses",
-    priceId: "price_1Nt52gSCc7vncoJQ2crtH9Vx",
-    credits: 10,
-    price: 10,
-    unit: "INR",
-    isRecommended: false,
-  },
-  {
-    name: "Regular: 1250 words of Conversation responses",
-    priceId: "price_1NrxVwSCc7vncoJQ9USQdKHv",
-    credits: 50,
-    price: 50,
-    unit: "INR",
-    isRecommended: true,
-  },
-  {
-    name: "Premium: 2500 words of Conversation responses",
-    priceId: "price_1Nt53ASCc7vncoJQr8O6yhOD",
-    credits: 100,
-    price: 100,
-    unit: "INR",
-    isRecommended: false,
-  },
-]
 
 const TransactionOption = ({
   name,
@@ -123,7 +88,7 @@ const TransactionModal = () => {
   const { user } = useUser()
 
   const defaultValues = {
-    priceId: "price_1NrxVwSCc7vncoJQ9USQdKHv",
+    priceId: transactionOptions[1].priceId,
     quantity: 1,
   }
 
@@ -184,8 +149,6 @@ const TransactionModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent className="bg-gray-50">
-        {/* <ComingSoon /> */}
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>
