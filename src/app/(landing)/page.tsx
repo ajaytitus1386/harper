@@ -218,7 +218,7 @@ const ToolSphere = ({
 const LandingPage = () => {
   return (
     <div className="flex flex-col relative items-center justify-center h-full w-full mt-8">
-      <h1 className="absolute w-full md:w-1/2 top-16 text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl leading-normal font-bold text-transparent text-center bg-clip-text bg-gradient-to-r from-landing-from to-landing-to">
+      <h1 className="absolute w-full h-full md:w-1/2 top-16 text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl leading-normal font-bold text-transparent text-center bg-clip-text bg-gradient-to-r from-landing-from to-landing-to">
         Compose your Imagination into{" "}
         <Typed
           className="text-transparent bg-gradient-to-r from-upgrade-from to-upgrade-to bg-clip-text"
