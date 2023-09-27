@@ -5,6 +5,7 @@ import { HarperTool, toolsContent } from "@/content/tools"
 import { useBreakpoint } from "@/hooks/useBreakpoint"
 import { cn } from "@/lib/utils"
 import { SignUpButton, useUser } from "@clerk/nextjs"
+import Typed from "react-typed"
 import Link from "next/link"
 import React, { Children, cloneElement, useEffect, useState } from "react"
 
@@ -110,7 +111,7 @@ const RotatingCarousel: React.FC<{ children: React.ReactNode }> = ({
             // Since we use the top left attributes, we need to adjust the coordinates to start relative to the center of the circle
             style={{
               position: "absolute",
-              zIndex: index % 2 === 0 ? "99" : "0",
+              zIndex: index % 2 === 0 ? "50" : "0",
               // 50% of parent size is used
               top:
                 selectedChild === child
@@ -218,7 +219,16 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col relative items-center justify-center h-full w-full mt-8">
       <h1 className="absolute w-full md:w-1/2 top-16 text-2xl md:text-3xl xl:text-4xl 2xl:text-5xl leading-normal font-bold text-transparent text-center bg-clip-text bg-gradient-to-r from-landing-from to-landing-to">
-        Compose your Imagination into Reality
+        Compose your Imagination into{" "}
+        <Typed
+          className="text-transparent bg-gradient-to-r from-upgrade-from to-upgrade-to bg-clip-text"
+          strings={["Reality", "an AI Assistant", "a Personified Avatar"]}
+          typeSpeed={100}
+          backDelay={2000}
+          backSpeed={50}
+          showCursor={false}
+          loop
+        />
       </h1>
       <RotatingCarousel>
         {harperTools.map((tool) => (
