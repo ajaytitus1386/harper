@@ -47,7 +47,7 @@ export const pollPredictionStatus: (
 
   const json: PredictionResponse = response.data
   if (response.status !== 200) {
-    console.log("error in polling", response)
+    // console.log("error in polling", response)
   }
 
   predictionStatus = json.status
