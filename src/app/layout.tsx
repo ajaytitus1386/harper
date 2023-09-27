@@ -50,6 +50,7 @@ library.add(
 )
 
 import { config } from "@fortawesome/fontawesome-svg-core"
+import CrispProvider from "@/components/crisp/crispProvider"
 config.autoAddCss = false
 
 export default function RootLayout({
@@ -63,6 +64,7 @@ export default function RootLayout({
         <head>
           <link rel="icon" href="/favicon.ico" sizes="any" />
         </head>
+        <CrispProvider />
         <body className={[poppins.className, "h-full"].join(" ")}>
           <AppProvider>
             <ModalProvider />
