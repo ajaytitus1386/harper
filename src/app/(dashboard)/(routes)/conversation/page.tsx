@@ -79,9 +79,11 @@ const BotMessage = ({ message }: { message: string }) => {
       </div>
       <div className="px-4 py-2 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
         {/* //TODO: Parse markdown as well as Typewriter with <ReactMarkdown /> */}
-        <ReactMarkdown>
-          {CustomTypewriter({ text: message, delay: 50 })}
-        </ReactMarkdown>
+        {message && (
+          <ReactMarkdown>
+            {CustomTypewriter({ text: message, delay: 50 })}
+          </ReactMarkdown>
+        )}
       </div>
     </div>
   )
@@ -188,7 +190,7 @@ const ConversationPage = () => {
       { message: values.prompt, sender: "user" },
     ])
 
-    const messageIndex = messagesState.length + 1
+    const messageIndex = messagesState?.length + 1
 
     form.setValue("prompt", "")
 
@@ -228,7 +230,7 @@ const ConversationPage = () => {
         setOutput: (predOutput) => {
           setMessagesState((prev) => {
             const prevMessages = [...prev]
-            console.log("predOutput", predOutput)
+            // console.log("predOutput", predOutput)
 
             prevMessages[messageIndex] = {
               message: predOutput.output?.join(""),
@@ -356,10 +358,10 @@ const ConversationPage = () => {
         </TabsList>
       </Tabs>
       <div className="flex flex-col h-full overflow-hidden justify-between space-y-4 md:flex-col-reverse md:justify-end">
-        {messagesState.length > 0 ? (
+        {messagesState?.length > 0 ? (
           // Messages
           <ScrollArea className={"flex flex-col space-y-4"}>
-            {messagesState.map(({ message, sender }, index) =>
+            {messagesState?.map(({ message, sender }, index) =>
               sender === "bot" ? (
                 <BotMessage key={`message_${index}`} message={message} />
               ) : (
