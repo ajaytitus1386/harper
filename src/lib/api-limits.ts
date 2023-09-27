@@ -48,18 +48,22 @@ export const addToApiUsedCredits = async ({
   })
 
   if (!userApiLimit) {
-    await initNewApiUser({ userId })
+    const newUser = await initNewApiUser({ userId })
+
     await prismadb.userApiLimit.update({
       where: { userId },
       data: {
-        usedCredits: credits,
+        usedCredits: Math.min(credits, newUser.totalCredits),
       },
     })
   } else {
     await prismadb.userApiLimit.update({
       where: { userId },
       data: {
-        usedCredits: userApiLimit.usedCredits + credits,
+        usedCredits: Math.min(
+          userApiLimit.usedCredits + credits,
+          userApiLimit.totalCredits
+        ),
       },
     })
   }
