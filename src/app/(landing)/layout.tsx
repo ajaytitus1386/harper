@@ -57,7 +57,8 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
       <div
         className={cn(
           [
-            "absolute top-0 lg:-top-[33%] left-0 w-full overflow-hidden",
+            // Adjusted upwards to compensate for the curve and prevent it underlapping the children
+            "absolute top-0 sm:-top-[2.5vw] md:-top-[5vw] lg:-top-[12.5vw] left-0 w-full overflow-hidden",
             animatedDividerClassName,
           ].join(" ")
         )}
@@ -66,7 +67,8 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1280 901.84"
           preserveAspectRatio="none"
-          className="relative block w-[100%] md:-translate-y-1/2"
+          // Adjusted upwards to compensate for the curve
+          className="relative block w-[100%] sm:-translate-y-1/3 md:-translate-y-1/2"
         >
           <g id="Layer_2" data-name="Layer 2">
             <g id="Layer_1-2" data-name="Layer 1">
