@@ -58,7 +58,7 @@ const LandingLayout = ({ children }: { children: React.ReactNode }) => {
         className={cn(
           [
             // Adjusted upwards to compensate for the curve and prevent it underlapping the children
-            "absolute top-0 sm:-top-[2.5vw] md:-top-[5vw] lg:-top-[12.5vw] left-0 w-full overflow-hidden",
+            "absolute top-0 sm:-top-[2.5vw] md:-top-[5vw] lg:-top-[12.5vw] xl:-top-[15vw] 2xl:-top-[17.5vw] left-0 w-full overflow-hidden",
             animatedDividerClassName,
           ].join(" ")
         )}
