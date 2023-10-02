@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useTransactionModal } from "@/hooks/useTransactionModal"
 import useUserCredits from "@/hooks/useUserCredits"
 import { useClerk, useUser } from "@clerk/nextjs"
+import MoonLoader from "react-spinners/MoonLoader"
 
 import { UserTransaction } from "@prisma/client"
 import axios from "axios"
@@ -180,12 +181,20 @@ const SettingsPage = () => {
       <h2 className="text-lg md:text-xl 2xl:text-3xl font-medium">
         Transaction History
       </h2>
-      {transactions.length ? (
-        <SimpleTable transactions={transactions} />
+      {isCreditsLoaded ? (
+        transactions.length ? (
+          <SimpleTable transactions={transactions} />
+        ) : (
+          <p className="text-sm text-muted-foreground font-light">
+            No Transactions have been made yet
+          </p>
+        )
       ) : (
-        <p className="text-sm text-muted-foreground font-light">
-          No Transactions have been made yet
-        </p>
+        <MoonLoader
+          className="text-muted-foreground mx-auto"
+          speedMultiplier={0.5}
+          size={40}
+        />
       )}
     </div>
   )
