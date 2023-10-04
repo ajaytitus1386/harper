@@ -389,9 +389,7 @@ const ConversationPage = () => {
                   message={message}
                   setIsTyping={setIsTypingLatestMessage}
                   isLatestMessage={
-                    index === messagesState.length - 1 &&
-                    isCompletionProcessing &&
-                    isTypingLatestMessage
+                    index === messagesState.length - 1 && isCompletionProcessing
                   }
                 />
               ) : (
