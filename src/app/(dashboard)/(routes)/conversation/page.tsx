@@ -55,7 +55,15 @@ import useUserCredits from "@/hooks/useUserCredits"
 import CustomTypewriter from "@/components/dashboard/customTypewriter"
 import { useConversation } from "@/hooks/useConversation"
 
-const BotMessage = ({ message }: { message: string }) => {
+const BotMessage = ({
+  message,
+  setIsTyping,
+  isLatestMessage = false,
+}: {
+  message: string
+  setIsTyping: React.Dispatch<React.SetStateAction<boolean>>
+  isLatestMessage?: boolean
+}) => {
   const { toast } = useToast()
 
   const copyToClipboard = () => {
@@ -80,8 +88,13 @@ const BotMessage = ({ message }: { message: string }) => {
       <div className="px-4 py-2 bg-routes-conversation text-white rounded-l-lg rounded-tr-lg rounded-br-sm">
         {/* //TODO: Parse markdown as well as Typewriter with <ReactMarkdown /> */}
         {message && (
-          <ReactMarkdown>
-            {CustomTypewriter({ text: message, delay: 50 })}
+          <ReactMarkdown linkTarget={"_blank"}>
+            {CustomTypewriter({
+              text: message,
+              delay: 50,
+              setIsTyping,
+              skipTyping: !isLatestMessage,
+            })}
           </ReactMarkdown>
         )}
       </div>
@@ -137,6 +150,7 @@ const ConversationPage = () => {
     useConversation()
 
   const [isCompletionProcessing, setIsCompletionProcessing] = useState(false)
+  const [isTypingLatestMessage, setIsTypingLatestMessage] = useState(false)
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false)
 
   const bottomOfConversation = useRef<HTMLDivElement>(null)
@@ -182,9 +196,14 @@ const ConversationPage = () => {
     }
   }, [selectedMode])
 
-  const isLoading = form.formState.isSubmitting && isCompletionProcessing
+  const isLoading =
+    form.formState.isSubmitting ||
+    isCompletionProcessing ||
+    isTypingLatestMessage
 
   const onSubmit = async (values: z.infer<typeof converstaionFormSchema>) => {
+    if (isLoading) return
+
     setMessagesState((prev) => [
       ...prev,
       { message: values.prompt, sender: "user" },
@@ -229,6 +248,8 @@ const ConversationPage = () => {
         prediction: response,
         setOutput: (predOutput) => {
           setMessagesState((prev) => {
+            if (!isTypingLatestMessage) setIsTypingLatestMessage(true)
+
             const prevMessages = [...prev]
             // console.log("predOutput", predOutput)
 
@@ -363,7 +384,16 @@ const ConversationPage = () => {
           <ScrollArea className={"flex flex-col space-y-4"}>
             {messagesState?.map(({ message, sender }, index) =>
               sender === "bot" ? (
-                <BotMessage key={`message_${index}`} message={message} />
+                <BotMessage
+                  key={`message_${index}`}
+                  message={message}
+                  setIsTyping={setIsTypingLatestMessage}
+                  isLatestMessage={
+                    index === messagesState.length - 1 &&
+                    isCompletionProcessing &&
+                    isTypingLatestMessage
+                  }
+                />
               ) : (
                 <UserMessage key={`message_${index}`} message={message} />
               )
